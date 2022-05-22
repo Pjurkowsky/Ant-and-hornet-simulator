@@ -1,0 +1,121 @@
+import javax.swing.*;
+import java.awt.*;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+public class SimScreen extends JPanel {
+    public static final int WIDTH = Simulation.WIDTH - Simulation.offsetOfWidth; // width of simWindow
+    public static final int HEIGHT = Simulation.HEIGHT; // height of simWindow
+    public static final int BLOCKSIZE = 20; // size of cell that's visible on screen
+
+    private boolean running = false;
+
+    private int map[][];
+    private JPanel jPanelMap[][];
+
+    private Random random;
+    private int nestPosX;
+    private int nestPosY;
+    private int steps = 0;
+
+    private int numberOfAnts = 10;
+    private ArrayList<Ant> ants;
+
+
+    public SimScreen() {
+
+        //init map and jPanelMap
+        map = new int[HEIGHT / BLOCKSIZE][WIDTH / BLOCKSIZE];
+        jPanelMap = new JPanel[HEIGHT / BLOCKSIZE][WIDTH / BLOCKSIZE];
+
+
+        for (int i = 0; i < HEIGHT / BLOCKSIZE; i++) {
+            for (int j = 0; j < WIDTH / BLOCKSIZE; j++) {
+                map[i][j] = 0;
+                jPanelMap[i][j] = new JPanel();
+            }
+        }
+
+        // add nest to the map
+        random = new Random();
+        nestPosY = random.nextInt(HEIGHT) / BLOCKSIZE;
+        nestPosX = random.nextInt(WIDTH) / BLOCKSIZE;
+        map[nestPosY][nestPosX] = 2;
+
+        // add ants to map
+        ants = new ArrayList<>();
+        for (int i = 0; i < numberOfAnts; i++) {
+            ants.add(new Ant(nestPosX + 1, nestPosY + 1));
+            map[ants.get(i).getY()][ants.get(i).getX()] = 1;
+        }
+
+    }
+
+    //render the game
+    private void render(Graphics g) {
+        drawGrid(g);
+
+        // draw cells
+        for (int i = 0; i < HEIGHT / BLOCKSIZE; i++) {
+            for (int j = 0; j < WIDTH / BLOCKSIZE; j++) {
+                jPanelMap[i][j].setVisible(false);
+                if (map[i][j] == 1) {
+                    jPanelMap[i][j].setVisible(true);
+                    jPanelMap[i][j].setBackground(Color.BLACK);
+                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1, BLOCKSIZE - 1, BLOCKSIZE - 1);
+                    this.add(jPanelMap[i][j]);
+                }
+                if (map[i][j] == 2) {
+                    jPanelMap[i][j].setVisible(true);
+                    jPanelMap[i][j].setBackground(Color.GREEN);
+                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1, BLOCKSIZE - 1, BLOCKSIZE - 1);
+                    this.add(jPanelMap[i][j]);
+                }
+            }
+        }
+    }
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        render(g);
+    }
+
+    public void update() {
+        if (running) {
+            steps++;
+            for (int i = 0; i < numberOfAnts; i++) {
+                map[ants.get(i).getY()][ants.get(i).getX()] = 0;
+                ants.get(i).movement(map);
+                map[ants.get(i).getY()][ants.get(i).getX()] = 1;
+            }
+            this.repaint(); //redraw the screen
+        }
+    }
+
+
+    private void drawGrid(Graphics g) {
+        //draw vertical lines
+        for (int i = 0; i <= WIDTH / BLOCKSIZE; i++)
+            g.drawLine(i * BLOCKSIZE, 0, i * BLOCKSIZE, HEIGHT);
+        //draw horizontal lines
+        for (int i = 0; i <= HEIGHT / BLOCKSIZE; i++)
+            g.drawLine(1, i * BLOCKSIZE, WIDTH, i * BLOCKSIZE);
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
+    }
+
+    public int getSteps() {
+        return steps;
+    }
+
+    public void resetSteps() {
+        this.steps = 0;
+    }
+}
