@@ -1,8 +1,7 @@
 plugins {
     id 'java'
+    id 'edu.sc.seis.launch4j' version '2.5.3'
 }
-
-
 
 group 'org.example'
 version '1.0-SNAPSHOT'
@@ -19,4 +18,13 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+jar {
+    manifest{
+        attributes "Main-Class": "Simulation"
+
+    }
+}
+launch4j {
+    mainClassName = 'Simulation'
 }
