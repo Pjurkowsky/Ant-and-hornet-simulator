@@ -6,23 +6,26 @@ public class Parameters {
 
     private static ArrayList<ArrayList<Integer>> listOfListsOfParameters = new ArrayList<>();
 
-//    private static int numberOfAnts = 10;
-//    private static int numberOfHornets = 10;
-//    private static int numberOfFlowers = 3;
+//    private int numberOfAnts = 0;
+//    private int numberOfHornets = 0;
+//    private int numberOfFlowers = 0;
 
     private static int numberOfParameters = 3;
-
     private static int numberOfListsOfParameters = 0;
 
-    public static ArrayList<ArrayList<Integer>> loadDataFromFile(String fileName){
+    public static void loadDataFromFile(String fileName) {
         try {
+            fileName = "src/main/resources/" + fileName;
+
+
             File file = new File(fileName);
+
+
             Scanner scanner = new Scanner(file);
             int counter = 0;
             listOfListsOfParameters.add(new ArrayList<>());
-
             while (scanner.hasNext()) {
-                if(counter >= numberOfParameters){
+                if (counter >= numberOfParameters) {
                     counter = 0;
                     listOfListsOfParameters.add(new ArrayList<>());
                     numberOfListsOfParameters++;
@@ -32,14 +35,16 @@ public class Parameters {
                 counter++;
             }
             scanner.close();
-        } catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-
-
         System.out.println(listOfListsOfParameters);
-        return listOfListsOfParameters;
     }
+
+    public static ArrayList<Integer> getParameters(int i) {
+        return listOfListsOfParameters.get(i);
+    }
+
 }

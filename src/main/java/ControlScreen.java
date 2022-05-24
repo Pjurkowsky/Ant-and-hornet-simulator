@@ -2,6 +2,7 @@ import javax.swing.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class ControlScreen extends JPanel implements ActionListener {
 
@@ -32,10 +33,15 @@ public class ControlScreen extends JPanel implements ActionListener {
     JTextField setFpsTextField;
 
     SimScreen simScreen;
+    Simulation simulation;
 
+    private int numberOfAnts = 0;
+    private int numberOfHornets = 0;
+    private int numberOfFlowers = 0;
 
-    public ControlScreen(SimScreen simScreen) {
+    public ControlScreen(Simulation simulation, SimScreen simScreen) {
         this.simScreen = simScreen;
+        this.simulation = simulation;
 
         antsNumberText = new JLabel("ants number: ");
         antsNumberText.setBounds(10, 20, 100, 30);
@@ -52,6 +58,7 @@ public class ControlScreen extends JPanel implements ActionListener {
 
         hornetNumberTextField = new JTextField();
         hornetNumberTextField.setBounds(100, 60, 50, 30);
+        hornetNumberTextField.addActionListener(this);
         this.add(hornetNumberTextField);
 
         flowerNumberText = new JLabel("flower number: ");
@@ -60,22 +67,25 @@ public class ControlScreen extends JPanel implements ActionListener {
 
         flowerNumberTextField = new JTextField();
         flowerNumberTextField.setBounds(100, 100, 50, 30);
+        flowerNumberTextField.addActionListener(this);
         this.add(flowerNumberTextField);
 
         dataFromFileText = new JLabel("load from file: ");
         dataFromFileText.setBounds(10, 140, 100, 30);
         this.add(dataFromFileText);
 
-        dataFromFileTextField = new JTextField();
+        dataFromFileTextField = new JTextField("data.txt");
         dataFromFileTextField.setBounds(100, 140, 50, 30);
+        dataFromFileTextField.addActionListener(this);
         this.add(dataFromFileTextField);
 
         saveDataText = new JLabel("save to: ");
         saveDataText.setBounds(10, 180, 100, 30);
         this.add(saveDataText);
 
-        saveDataTextField = new JTextField();
+        saveDataTextField = new JTextField("output.txt");
         saveDataTextField.setBounds(100, 180, 50, 30);
+        saveDataTextField.addActionListener(this);
         this.add(saveDataTextField);
 
         startButton = new JButton("START");
@@ -96,25 +106,38 @@ public class ControlScreen extends JPanel implements ActionListener {
         stepSetText.setBounds(10, 340, 100, 30);
         this.add(stepSetText);
 
-        stepSetTextField = new JTextField();
+        stepSetTextField = new JTextField(Integer.toString(simulation.getSetSteps()));
         stepSetTextField.setBounds(100, 340, 50, 30);
-        stepSetTextField.setText("10");
+        stepSetTextField.addActionListener(this);
         this.add(stepSetTextField);
 
         setFpsText = new JLabel("set fps: ");
         setFpsText.setBounds(10, 380, 100, 30);
         this.add(setFpsText);
 
-        setFpsTextField = new JTextField();
+        setFpsTextField = new JTextField(Integer.toString(simulation.getSetSteps()));
         setFpsTextField.setBounds(100, 380, 50, 30);
-        setFpsTextField.setText("10");
+        setFpsTextField.addActionListener(this);
         this.add(setFpsTextField);
-
     }
-
 
     public void update() {
         stepsText.setText("Steps: " + simScreen.getSteps());
+    }
+
+    public void updateParameters( ArrayList<Integer> parameters) {
+        numberOfAnts = parameters.get(0);
+        antsNumberTextField.setText(Integer.toString(numberOfAnts));
+        simScreen.setNumberOfAnts(numberOfAnts);
+
+        numberOfHornets = parameters.get(1);
+        simScreen.setNumberOfHornets(numberOfHornets);
+        hornetNumberTextField.setText(Integer.toString(numberOfHornets));
+
+        numberOfFlowers = parameters.get(2);
+        simScreen.setNumberOfFlowers(numberOfFlowers);
+        flowerNumberTextField.setText(Integer.toString(numberOfFlowers));
+
     }
 
     @Override
@@ -122,37 +145,46 @@ public class ControlScreen extends JPanel implements ActionListener {
         //buttons
         if (e.getSource() == startButton && !simScreen.isRunning()) {
             simScreen.setRunning(true);
-            if (simScreen.getSteps() == getSetStepsFromTextField())
+            if (simScreen.getSteps() == simulation.getSetSteps()){
                 simScreen.resetSteps();
+                simScreen.init();
+            }
+
         }
         if (e.getSource() == stopButton) {
-            if (!simScreen.isRunning())
+            if (!simScreen.isRunning()){
                 simScreen.resetSteps();
+                simScreen.init();
+            }
+
             simScreen.setRunning(false);
         }
 
         //textFields
         if (e.getSource() == antsNumberTextField) {
-            System.out.println(antsNumberTextField.getText());
+            try {
+                simScreen.setNumberOfAnts(Integer.parseInt(antsNumberTextField.getText()));
+            } catch (NumberFormatException er) {
+                simScreen.setNumberOfAnts(0);
+            }
+        }
+        if (e.getSource() == stepSetTextField) {
+            try {
+                System.out.println(Integer.parseInt(stepSetTextField.getText()));
+                simulation.setSetSteps(Integer.parseInt(stepSetTextField.getText()));
+            } catch (NumberFormatException er) {
+                simulation.setSetSteps(0);
+            }
+        }
+        if (e.getSource() == setFpsTextField) {
+            try {
+                simulation.setFPS(Integer.parseInt(setFpsTextField.getText()));
+            } catch (NumberFormatException er) {
+                simulation.setFPS(0);
+            }
         }
     }
 
-    public int getSetStepsFromTextField() {
-        try {
-            int steps = Integer.parseInt(stepSetTextField.getText());
-            return steps;
-        } catch (NumberFormatException e) {
-            return 0;
-        }
-    }
-    public int getSetFpsFromTextField() {
-        try {
-            int steps = Integer.parseInt(setFpsTextField.getText());
-            return steps;
-        } catch (NumberFormatException e) {
-            return 1;
-        }
-    }
 
 }
 

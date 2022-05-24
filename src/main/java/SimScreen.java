@@ -19,38 +19,52 @@ public class SimScreen extends JPanel {
     private int nestPosY;
     private int steps = 0;
 
-    private int numberOfAnts = 10;
+    private int numberOfAnts = 0;
+    private int numberOfHornets = 0;
+    private int numberOfFlowers = 0;
+
     private ArrayList<Ant> ants;
 
 
     public SimScreen() {
-
         //init map and jPanelMap
         map = new int[HEIGHT / BLOCKSIZE][WIDTH / BLOCKSIZE];
         jPanelMap = new JPanel[HEIGHT / BLOCKSIZE][WIDTH / BLOCKSIZE];
-
-
         for (int i = 0; i < HEIGHT / BLOCKSIZE; i++) {
             for (int j = 0; j < WIDTH / BLOCKSIZE; j++) {
                 map[i][j] = 0;
                 jPanelMap[i][j] = new JPanel();
             }
         }
+    }
+
+
+    //used to init new map
+    public void init() {
+        //reset steps
+        steps = 0;
+
+        //reset map
+        for (int i = 0; i < HEIGHT / BLOCKSIZE; i++)
+            for (int j = 0; j < WIDTH / BLOCKSIZE; j++)
+                map[i][j] = 0;
 
         // add nest to the map
         random = new Random();
-        nestPosY = random.nextInt(HEIGHT) / BLOCKSIZE;
-        nestPosX = random.nextInt(WIDTH) / BLOCKSIZE;
+        nestPosY = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
+        nestPosX = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
         map[nestPosY][nestPosX] = 2;
 
         // add ants to map
+        System.out.println(numberOfAnts);
         ants = new ArrayList<>();
         for (int i = 0; i < numberOfAnts; i++) {
             ants.add(new Ant(nestPosX + 1, nestPosY + 1));
             map[ants.get(i).getY()][ants.get(i).getX()] = 1;
         }
-
     }
+
+
 
     //render the game
     private void render(Graphics g) {
@@ -59,13 +73,16 @@ public class SimScreen extends JPanel {
         // draw cells
         for (int i = 0; i < HEIGHT / BLOCKSIZE; i++) {
             for (int j = 0; j < WIDTH / BLOCKSIZE; j++) {
+                //clear unused cells
                 jPanelMap[i][j].setVisible(false);
+                //draw ants
                 if (map[i][j] == 1) {
                     jPanelMap[i][j].setVisible(true);
                     jPanelMap[i][j].setBackground(Color.BLACK);
                     jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1, BLOCKSIZE - 1, BLOCKSIZE - 1);
                     this.add(jPanelMap[i][j]);
                 }
+                //draw nest
                 if (map[i][j] == 2) {
                     jPanelMap[i][j].setVisible(true);
                     jPanelMap[i][j].setBackground(Color.GREEN);
@@ -93,7 +110,6 @@ public class SimScreen extends JPanel {
         }
     }
 
-
     private void drawGrid(Graphics g) {
         //draw vertical lines
         for (int i = 0; i <= WIDTH / BLOCKSIZE; i++)
@@ -117,5 +133,17 @@ public class SimScreen extends JPanel {
 
     public void resetSteps() {
         this.steps = 0;
+    }
+
+    public void setNumberOfAnts(int numberOfAnts) {
+        this.numberOfAnts = numberOfAnts;
+    }
+
+    public void setNumberOfFlowers(int numberOfFlowers) {
+        this.numberOfFlowers = numberOfFlowers;
+    }
+
+    public void setNumberOfHornets(int numberOfHornets) {
+        this.numberOfHornets = numberOfHornets;
     }
 }

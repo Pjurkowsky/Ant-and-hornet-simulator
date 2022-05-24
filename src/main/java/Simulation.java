@@ -9,17 +9,23 @@ public class Simulation {
     public static final int offsetOfWidth = (int) Math.round(WIDTH * (1 - simScreenFactor));
 
 
-    public static double FPS = 10;
+    public static int FPS = 10;
     private static double timePerFrame = 1000000000.0 / FPS;
     private boolean running = true;
 
-    private int setSteps = 0;
+    private int setSteps = 10;
 
-
-    SimScreen simScreen = new SimScreen();
-    ControlScreen controlScreen = new ControlScreen(simScreen);
+    SimScreen simScreen;
+    ControlScreen controlScreen;
 
     public Simulation() {
+        Parameters.loadDataFromFile("data.txt");
+
+        simScreen = new SimScreen();
+        controlScreen = new ControlScreen(this, simScreen);
+        controlScreen.updateParameters(Parameters.getParameters(0)); // updates parameters for controll screen and also for simScreen
+        simScreen.init();
+
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(WIDTH, HEIGHT);
@@ -29,7 +35,6 @@ public class Simulation {
 
         simScreen.setPreferredSize(new Dimension(WIDTH - offsetOfWidth, HEIGHT));
         simScreen.setLayout(null);
-
 
         frame.add(controlScreen, BorderLayout.WEST);
         frame.add(simScreen, BorderLayout.EAST);
@@ -41,18 +46,17 @@ public class Simulation {
         while (running) {
             double delta = System.nanoTime() - lastTime;
             if (delta >= timePerFrame) {
-                if (simScreen.getSteps() >= controlScreen.getSetStepsFromTextField())
+                if (simScreen.getSteps() >= setSteps) {
                     simScreen.setRunning(false);
+                }
                 simScreen.update();
                 controlScreen.update();
-
-                setFPS(controlScreen.getSetFpsFromTextField());
                 lastTime = System.nanoTime();
             }
         }
     }
 
-    private void setFPS(double FPS) {
+    public void setFPS(int FPS) {
         this.FPS = FPS;
         this.timePerFrame = 1000000000.0 / this.FPS;
     }
@@ -61,4 +65,11 @@ public class Simulation {
         Simulation simulation = new Simulation();
     }
 
+    public void setSetSteps(int setSteps) {
+        this.setSteps = setSteps;
+    }
+
+    public int getSetSteps() {
+        return setSteps;
+    }
 }

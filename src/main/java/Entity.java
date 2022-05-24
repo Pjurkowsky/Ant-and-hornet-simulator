@@ -61,8 +61,7 @@ abstract class Entity {
 
         int prevX = x;
         int prevY = y;
-        System.out.println("X" + x);
-        System.out.println("Y" + y);
+
         do {
             x = prevX;
             y = prevY;
