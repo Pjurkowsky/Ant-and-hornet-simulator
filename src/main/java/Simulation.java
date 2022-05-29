@@ -19,7 +19,7 @@ public class Simulation {
     ControlScreen controlScreen;
 
     public Simulation() {
-        Parameters.loadDataFromFile("data.txt");
+        Parameters.loadDataFromFile("/data.txt");
 
         simScreen = new SimScreen();
         controlScreen = new ControlScreen(this, simScreen);
