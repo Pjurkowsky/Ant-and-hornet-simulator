@@ -64,16 +64,13 @@ public class SimScreen extends JPanel {
         nestPosX = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
         map[nestPosY][nestPosX] = 2;
 
-        // add hornets to the map
-        random = new Random();
-        hornetPosY = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
-        hornetPosX = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
-
         // add flowers
-        random = new Random();
-        flowerPosX = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
-        flowerPosY = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
-        map[flowerPosX][flowerPosY] = 4;
+        for(int i = 0; i < numberOfFlowers; i++) {
+            random = new Random();
+            flowerPosX = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
+            flowerPosY = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
+            map[flowerPosX][flowerPosY] = 4;
+        }
 
         // add ants to map
         System.out.println(numberOfAnts);
@@ -83,15 +80,18 @@ public class SimScreen extends JPanel {
             map[ants.get(i).getY()][ants.get(i).getX()] = 1;
         }
 
-        //
+        // add hornets to map
         System.out.println(numberOfHornets);
         hornets = new ArrayList<>();
         for (int i = 0; i < numberOfHornets; i++) {
+            random = new Random();
+            hornetPosY = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
+            hornetPosX = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
             hornets.add(new Hornet(hornetPosX, hornetPosY));
             map[hornets.get(i).getY()][hornets.get(i).getX()] = 3;
+
         }
     }
-
 
 
     //render the game
@@ -101,8 +101,10 @@ public class SimScreen extends JPanel {
         // draw cells
         for (int i = 0; i < HEIGHT / BLOCKSIZE; i++) {
             for (int j = 0; j < WIDTH / BLOCKSIZE; j++) {
+
                 //clear unused cells
                 jPanelMap[i][j].setVisible(false);
+
                 //draw ants
                 if (map[i][j] == 1) {
                     jPanelMap[i][j].setVisible(true);
@@ -110,6 +112,7 @@ public class SimScreen extends JPanel {
                     jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1, BLOCKSIZE - 1, BLOCKSIZE - 1);
                     this.add(jPanelMap[i][j]);
                 }
+
                 //draw nest
                 if (map[i][j] == 2) {
                     jPanelMap[i][j].setVisible(true);
@@ -117,6 +120,7 @@ public class SimScreen extends JPanel {
                     jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1, BLOCKSIZE - 1, BLOCKSIZE - 1);
                     this.add(jPanelMap[i][j]);
                 }
+
                 //draw hornets
                 if (map[i][j] == 3) {
                     jPanelMap[i][j].setVisible(true);
@@ -124,6 +128,7 @@ public class SimScreen extends JPanel {
                     jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1, BLOCKSIZE - 1, BLOCKSIZE - 1);
                     this.add(jPanelMap[i][j]);
                 }
+
                 //draw flowers
                 if (map[i][j] == 4) {
                     jPanelMap[i][j].setVisible(true);
