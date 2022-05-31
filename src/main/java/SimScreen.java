@@ -9,7 +9,7 @@ public class SimScreen extends JPanel {
     public static final int WIDTH = Simulation.WIDTH - Simulation.offsetOfWidth; // width of simWindow
     public static final int HEIGHT = WIDTH; // height of simWindow
     public static final int offsetOfHeight = Simulation.offsetOfWidth / 2;
-    public static  int BLOCKSIZE = 20; // size of cell that's visible on screen
+    public static int BLOCKSIZE = 20; // size of cell that's visible on screen
 
     private boolean running = false;
 
@@ -17,14 +17,7 @@ public class SimScreen extends JPanel {
     private JPanel jPanelMap[][];
 
     private Random random;
-    private int nestPosX;
-    private int nestPosY;
 
-    private int hornetPosX;
-    private int hornetPosY;
-
-    private int flowerPosX;
-    private int flowerPosY;
 
     private int steps = 0;
 
@@ -32,8 +25,12 @@ public class SimScreen extends JPanel {
     private int numberOfHornets = 0;
     private int numberOfFlowers = 0;
 
+
+    private Nest nest;
     private ArrayList<Ant> ants;
     private ArrayList<Hornet> hornets;
+    private ArrayList<Flower> flowers;
+    private SoliderAnt soliderAnt; // temporary for tests
 
 
     public SimScreen() {
@@ -60,16 +57,19 @@ public class SimScreen extends JPanel {
 
         // add nest to the map
         random = new Random();
-        nestPosY = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
-        nestPosX = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
+        int nestPosY = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
+        int nestPosX = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
+        nest = new Nest(nestPosX, nestPosY);
         map[nestPosY][nestPosX] = 2;
 
         // add flowers
-        for(int i = 0; i < numberOfFlowers; i++) {
+        flowers = new ArrayList<>();
+        for (int i = 0; i < numberOfFlowers; i++) {
             random = new Random();
-            flowerPosX = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
-            flowerPosY = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
-            map[flowerPosX][flowerPosY] = 4;
+            int flowerPosX = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
+            int flowerPosY = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
+            flowers.add(new Flower(flowerPosX, flowerPosY));
+            map[flowerPosY][flowerPosX] = 4;
         }
 
         // add ants to map
@@ -80,25 +80,28 @@ public class SimScreen extends JPanel {
             map[ants.get(i).getY()][ants.get(i).getX()] = 1;
         }
 
+        //add solider ant to map temporary
+        random = new Random();
+        soliderAnt = new SoliderAnt(nestPosX + 1, nestPosY);
+        map[soliderAnt.getY()][soliderAnt.getX()] = 5;
         // add hornets to map
         System.out.println(numberOfHornets);
         hornets = new ArrayList<>();
         for (int i = 0; i < numberOfHornets; i++) {
             random = new Random();
-            hornetPosY = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
-            hornetPosX = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
+            int hornetPosY = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
+            int hornetPosX = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
             hornets.add(new Hornet(hornetPosX, hornetPosY));
-            map[hornets.get(i).getY()][hornets.get(i).getX()] = 3;
-
+            map[hornetPosY][hornetPosX] = 3;
         }
     }
 
     //render the game
     private void render(Graphics g) {
-            drawGrid(g);
+        drawGrid(g);
 
-            // draw cells
-            for (int i = 0; i < HEIGHT / BLOCKSIZE; i++) {
+        // draw cells
+        for (int i = 0; i < HEIGHT / BLOCKSIZE; i++) {
             for (int j = 0; j < WIDTH / BLOCKSIZE; j++) {
 
                 //clear unused cells
@@ -123,7 +126,7 @@ public class SimScreen extends JPanel {
                 //draw hornets
                 if (map[i][j] == 3) {
                     jPanelMap[i][j].setVisible(true);
-                    jPanelMap[i][j].setBackground(Color.red);
+                    jPanelMap[i][j].setBackground(Color.RED);
                     jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
                     this.add(jPanelMap[i][j]);
                 }
@@ -131,7 +134,14 @@ public class SimScreen extends JPanel {
                 //draw flowers
                 if (map[i][j] == 4) {
                     jPanelMap[i][j].setVisible(true);
-                    jPanelMap[i][j].setBackground(Color.yellow);
+                    jPanelMap[i][j].setBackground(Color.YELLOW);
+                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
+                    this.add(jPanelMap[i][j]);
+                }
+                //draw solider ant
+                if (map[i][j] == 5) {
+                    jPanelMap[i][j].setVisible(true);
+                    jPanelMap[i][j].setBackground(Color.DARK_GRAY);
                     jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
                     this.add(jPanelMap[i][j]);
                 }
@@ -147,17 +157,25 @@ public class SimScreen extends JPanel {
     public void update() {
         if (running) {
             steps++;
+            //update ants
             for (int i = 0; i < numberOfAnts; i++) {
                 map[ants.get(i).getY()][ants.get(i).getX()] = 0;
                 ants.get(i).movement(map);
                 map[ants.get(i).getY()][ants.get(i).getX()] = 1;
             }
+            //update solider ants
+            map[soliderAnt.getY()][soliderAnt.getX()] = 0;
+            soliderAnt.movement(map);
+            map[soliderAnt.getY()][soliderAnt.getX()] = 5;
 
+
+            //update hornets
             for (int i = 0; i < numberOfHornets; i++) {
                 map[hornets.get(i).getY()][hornets.get(i).getX()] = 0;
                 hornets.get(i).movement(map);
                 map[hornets.get(i).getY()][hornets.get(i).getX()] = 3;
             }
+
             this.repaint(); //redraw the screen
         }
     }
