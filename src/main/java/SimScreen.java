@@ -9,7 +9,7 @@ public class SimScreen extends JPanel {
     public static final int WIDTH = Simulation.WIDTH - Simulation.offsetOfWidth; // width of simWindow
     public static final int HEIGHT = WIDTH; // height of simWindow
     public static final int offsetOfHeight = Simulation.offsetOfWidth / 2;
-    public static final int BLOCKSIZE = 20; // size of cell that's visible on screen
+    public static  int BLOCKSIZE = 20; // size of cell that's visible on screen
 
     private boolean running = false;
 
@@ -47,7 +47,6 @@ public class SimScreen extends JPanel {
             }
         }
     }
-
 
     //used to init new map
     public void init() {
@@ -96,10 +95,10 @@ public class SimScreen extends JPanel {
 
     //render the game
     private void render(Graphics g) {
-        drawGrid(g);
+            drawGrid(g);
 
-        // draw cells
-        for (int i = 0; i < HEIGHT / BLOCKSIZE; i++) {
+            // draw cells
+            for (int i = 0; i < HEIGHT / BLOCKSIZE; i++) {
             for (int j = 0; j < WIDTH / BLOCKSIZE; j++) {
 
                 //clear unused cells
@@ -125,7 +124,7 @@ public class SimScreen extends JPanel {
                 if (map[i][j] == 3) {
                     jPanelMap[i][j].setVisible(true);
                     jPanelMap[i][j].setBackground(Color.red);
-                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1, BLOCKSIZE - 1, BLOCKSIZE - 1);
+                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
                     this.add(jPanelMap[i][j]);
                 }
 
@@ -133,7 +132,7 @@ public class SimScreen extends JPanel {
                 if (map[i][j] == 4) {
                     jPanelMap[i][j].setVisible(true);
                     jPanelMap[i][j].setBackground(Color.yellow);
-                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1, BLOCKSIZE - 1, BLOCKSIZE - 1);
+                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
                     this.add(jPanelMap[i][j]);
                 }
             }

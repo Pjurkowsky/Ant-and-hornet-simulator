@@ -16,9 +16,7 @@ public class Simulation {
     private String fileNameInput = "data.txt";
     private String fileNameOutput = "output.txt";
 
-
     private int setSteps = 30;
-
 
     SimScreen simScreen;
     ControlScreen controlScreen;
@@ -28,7 +26,7 @@ public class Simulation {
 
         simScreen = new SimScreen();
         controlScreen = new ControlScreen(this, simScreen);
-        controlScreen.updateParameters(Parameters.getParameters(0)); // updates parameters for control screen and also for simScreen
+        controlScreen.updateParameters(Parameters.getParameters(0)); // updates parameters for controlScreen and also for simScreen
         simScreen.init();
 
         JFrame frame = new JFrame();
@@ -61,13 +59,18 @@ public class Simulation {
         }
     }
 
+
+    public static void main(String[] args) {
+        Simulation simulation = new Simulation();
+    }
+
     public void setFPS(int FPS) {
         this.FPS = FPS;
         this.timePerFrame = 1000000000.0 / this.FPS;
     }
 
-    public static void main(String[] args) {
-        Simulation simulation = new Simulation();
+    public static int getFPS() {
+        return FPS;
     }
 
     public void setSetSteps(int setSteps) {
