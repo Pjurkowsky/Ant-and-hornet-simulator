@@ -12,9 +12,13 @@ public class Simulation {
     private static double timePerFrame = 1000000000.0 / FPS;
     private boolean running = true;
 
+
     private String fileNameInput = "data.txt";
     private String fileNameOutput = "output.txt";
-    private int setSteps = 10;
+
+
+    private int setSteps = 30;
+
 
     SimScreen simScreen;
     ControlScreen controlScreen;

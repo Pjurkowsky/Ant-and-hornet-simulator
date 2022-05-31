@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 public class SimScreen extends JPanel {
@@ -18,6 +19,13 @@ public class SimScreen extends JPanel {
     private Random random;
     private int nestPosX;
     private int nestPosY;
+
+    private int hornetPosX;
+    private int hornetPosY;
+
+    private int flowerPosX;
+    private int flowerPosY;
+
     private int steps = 0;
 
     private int numberOfAnts = 0;
@@ -25,6 +33,7 @@ public class SimScreen extends JPanel {
     private int numberOfFlowers = 0;
 
     private ArrayList<Ant> ants;
+    private ArrayList<Hornet> hornets;
 
 
     public SimScreen() {
@@ -56,6 +65,14 @@ public class SimScreen extends JPanel {
         nestPosX = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
         map[nestPosY][nestPosX] = 2;
 
+        // add flowers
+        for(int i = 0; i < numberOfFlowers; i++) {
+            random = new Random();
+            flowerPosX = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
+            flowerPosY = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
+            map[flowerPosX][flowerPosY] = 4;
+        }
+
         // add ants to map
         System.out.println(numberOfAnts);
         ants = new ArrayList<>();
@@ -63,8 +80,19 @@ public class SimScreen extends JPanel {
             ants.add(new Ant(nestPosX + 1, nestPosY + 1));
             map[ants.get(i).getY()][ants.get(i).getX()] = 1;
         }
-    }
 
+        // add hornets to map
+        System.out.println(numberOfHornets);
+        hornets = new ArrayList<>();
+        for (int i = 0; i < numberOfHornets; i++) {
+            random = new Random();
+            hornetPosY = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
+            hornetPosX = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
+            hornets.add(new Hornet(hornetPosX, hornetPosY));
+            map[hornets.get(i).getY()][hornets.get(i).getX()] = 3;
+
+        }
+    }
 
     //render the game
     private void render(Graphics g) {
@@ -73,8 +101,10 @@ public class SimScreen extends JPanel {
         // draw cells
         for (int i = 0; i < HEIGHT / BLOCKSIZE; i++) {
             for (int j = 0; j < WIDTH / BLOCKSIZE; j++) {
+
                 //clear unused cells
                 jPanelMap[i][j].setVisible(false);
+
                 //draw ants
                 if (map[i][j] == 1) {
                     jPanelMap[i][j].setVisible(true);
@@ -82,11 +112,28 @@ public class SimScreen extends JPanel {
                     jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
                     this.add(jPanelMap[i][j]);
                 }
+
                 //draw nest
                 if (map[i][j] == 2) {
                     jPanelMap[i][j].setVisible(true);
                     jPanelMap[i][j].setBackground(Color.GREEN);
                     jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
+                    this.add(jPanelMap[i][j]);
+                }
+
+                //draw hornets
+                if (map[i][j] == 3) {
+                    jPanelMap[i][j].setVisible(true);
+                    jPanelMap[i][j].setBackground(Color.red);
+                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1, BLOCKSIZE - 1, BLOCKSIZE - 1);
+                    this.add(jPanelMap[i][j]);
+                }
+
+                //draw flowers
+                if (map[i][j] == 4) {
+                    jPanelMap[i][j].setVisible(true);
+                    jPanelMap[i][j].setBackground(Color.yellow);
+                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1, BLOCKSIZE - 1, BLOCKSIZE - 1);
                     this.add(jPanelMap[i][j]);
                 }
             }
@@ -105,6 +152,12 @@ public class SimScreen extends JPanel {
                 map[ants.get(i).getY()][ants.get(i).getX()] = 0;
                 ants.get(i).movement(map);
                 map[ants.get(i).getY()][ants.get(i).getX()] = 1;
+            }
+
+            for (int i = 0; i < numberOfHornets; i++) {
+                map[hornets.get(i).getY()][hornets.get(i).getX()] = 0;
+                hornets.get(i).movement(map);
+                map[hornets.get(i).getY()][hornets.get(i).getX()] = 3;
             }
             this.repaint(); //redraw the screen
         }

@@ -75,7 +75,7 @@ abstract class Entity {
             if (direction == Direction.TOPLEFT || direction == Direction.LEFT || direction == Direction.BOTTOMLEFT)
                 x -= 1;
             checkBounds();
-        } while (map[y][x] == 1 || map[y][x] == 2);
+        } while (map[y][x] == 2 || map[y][x]==4);
 
 
     }
