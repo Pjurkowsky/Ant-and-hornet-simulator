@@ -6,7 +6,8 @@ import java.util.Random;
 
 public class SimScreen extends JPanel {
     public static final int WIDTH = Simulation.WIDTH - Simulation.offsetOfWidth; // width of simWindow
-    public static final int HEIGHT = Simulation.HEIGHT; // height of simWindow
+    public static final int HEIGHT = WIDTH; // height of simWindow
+    public static final int offsetOfHeight = Simulation.offsetOfWidth / 2;
     public static final int BLOCKSIZE = 20; // size of cell that's visible on screen
 
     private boolean running = false;
@@ -65,7 +66,6 @@ public class SimScreen extends JPanel {
     }
 
 
-
     //render the game
     private void render(Graphics g) {
         drawGrid(g);
@@ -79,14 +79,14 @@ public class SimScreen extends JPanel {
                 if (map[i][j] == 1) {
                     jPanelMap[i][j].setVisible(true);
                     jPanelMap[i][j].setBackground(Color.BLACK);
-                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1, BLOCKSIZE - 1, BLOCKSIZE - 1);
+                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
                     this.add(jPanelMap[i][j]);
                 }
                 //draw nest
                 if (map[i][j] == 2) {
                     jPanelMap[i][j].setVisible(true);
                     jPanelMap[i][j].setBackground(Color.GREEN);
-                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1, BLOCKSIZE - 1, BLOCKSIZE - 1);
+                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
                     this.add(jPanelMap[i][j]);
                 }
             }
@@ -113,10 +113,10 @@ public class SimScreen extends JPanel {
     private void drawGrid(Graphics g) {
         //draw vertical lines
         for (int i = 0; i <= WIDTH / BLOCKSIZE; i++)
-            g.drawLine(i * BLOCKSIZE, 0, i * BLOCKSIZE, HEIGHT);
+            g.drawLine(i * BLOCKSIZE, offsetOfHeight, i * BLOCKSIZE, HEIGHT + offsetOfHeight);
         //draw horizontal lines
         for (int i = 0; i <= HEIGHT / BLOCKSIZE; i++)
-            g.drawLine(1, i * BLOCKSIZE, WIDTH, i * BLOCKSIZE);
+            g.drawLine(1, i * BLOCKSIZE + offsetOfHeight, WIDTH, i * BLOCKSIZE + offsetOfHeight);
     }
 
     public boolean isRunning() {

@@ -1,5 +1,6 @@
 import javax.swing.*;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class ControlScreen extends JPanel implements ActionListener {
         dataFromFileText.setBounds(10, 140, 100, 30);
         this.add(dataFromFileText);
 
-        dataFromFileTextField = new JTextField("data.txt");
+        dataFromFileTextField = new JTextField(simulation.getFileNameInput());
         dataFromFileTextField.setBounds(100, 140, 50, 30);
         dataFromFileTextField.addActionListener(this);
         this.add(dataFromFileTextField);
@@ -83,7 +84,7 @@ public class ControlScreen extends JPanel implements ActionListener {
         saveDataText.setBounds(10, 180, 100, 30);
         this.add(saveDataText);
 
-        saveDataTextField = new JTextField("output.txt");
+        saveDataTextField = new JTextField(simulation.getFileNameOutput());
         saveDataTextField.setBounds(100, 180, 50, 30);
         saveDataTextField.addActionListener(this);
         this.add(saveDataTextField);
@@ -125,7 +126,7 @@ public class ControlScreen extends JPanel implements ActionListener {
         stepsText.setText("Steps: " + simScreen.getSteps());
     }
 
-    public void updateParameters( ArrayList<Integer> parameters) {
+    public void updateParameters(ArrayList<Integer> parameters) {
         numberOfAnts = parameters.get(0);
         antsNumberTextField.setText(Integer.toString(numberOfAnts));
         simScreen.setNumberOfAnts(numberOfAnts);
@@ -145,14 +146,14 @@ public class ControlScreen extends JPanel implements ActionListener {
         //buttons
         if (e.getSource() == startButton && !simScreen.isRunning()) {
             simScreen.setRunning(true);
-            if (simScreen.getSteps() == simulation.getSetSteps()){
+            if (simScreen.getSteps() == simulation.getSetSteps()) {
                 simScreen.resetSteps();
                 simScreen.init();
             }
 
         }
         if (e.getSource() == stopButton) {
-            if (!simScreen.isRunning()){
+            if (!simScreen.isRunning()) {
                 simScreen.resetSteps();
                 simScreen.init();
             }
@@ -183,6 +184,18 @@ public class ControlScreen extends JPanel implements ActionListener {
                 simulation.setFPS(0);
             }
         }
+        if (e.getSource() == dataFromFileTextField) {
+
+            String fileName = dataFromFileTextField.getText();
+            if (fileName.contains(".txt")) {
+
+                Parameters.loadDataFromFile("/" + fileName);
+                updateParameters(Parameters.getParameters(0));
+            }
+
+        }
+
+
     }
 
 

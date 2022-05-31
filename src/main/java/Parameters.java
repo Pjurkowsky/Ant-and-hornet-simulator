@@ -15,12 +15,12 @@ public class Parameters {
 
     public static void loadDataFromFile(String fileName) {
         try {
+            //reset if new file
+            listOfListsOfParameters.clear();
+            numberOfListsOfParameters = 0;
+
             fileName = "src/main/resources/" + fileName;
-
-
             File file = new File(fileName);
-
-
             Scanner scanner = new Scanner(file);
             int counter = 0;
             listOfListsOfParameters.add(new ArrayList<>());

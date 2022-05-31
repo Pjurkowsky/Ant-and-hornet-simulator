@@ -8,22 +8,23 @@ public class Simulation {
     public static final double simScreenFactor = 0.8; // divide screen 20% for controlScreen and 80% for simScreen
     public static final int offsetOfWidth = (int) Math.round(WIDTH * (1 - simScreenFactor));
 
-
     public static int FPS = 10;
     private static double timePerFrame = 1000000000.0 / FPS;
     private boolean running = true;
 
+    private String fileNameInput = "data.txt";
+    private String fileNameOutput = "output.txt";
     private int setSteps = 10;
 
     SimScreen simScreen;
     ControlScreen controlScreen;
 
     public Simulation() {
-        Parameters.loadDataFromFile("/data.txt");
+        Parameters.loadDataFromFile("/" + fileNameInput);
 
         simScreen = new SimScreen();
         controlScreen = new ControlScreen(this, simScreen);
-        controlScreen.updateParameters(Parameters.getParameters(0)); // updates parameters for controll screen and also for simScreen
+        controlScreen.updateParameters(Parameters.getParameters(0)); // updates parameters for control screen and also for simScreen
         simScreen.init();
 
         JFrame frame = new JFrame();
@@ -71,5 +72,13 @@ public class Simulation {
 
     public int getSetSteps() {
         return setSteps;
+    }
+
+    public String getFileNameInput() {
+        return fileNameInput;
+    }
+
+    public String getFileNameOutput() {
+        return fileNameOutput;
     }
 }

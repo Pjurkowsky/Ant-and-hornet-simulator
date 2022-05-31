@@ -3,6 +3,4 @@ public class Ant extends Entity {
         this.x = x;
         this.y = y;
     }
-
-
 }
