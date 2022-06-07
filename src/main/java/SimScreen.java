@@ -24,6 +24,7 @@ public class SimScreen extends JPanel {
     private int numberOfAnts = 0;
     private int numberOfHornets = 0;
     private int numberOfFlowers = 0;
+    private int numberOfFood = 9;
 
 
     private Nest nest;
@@ -31,6 +32,7 @@ public class SimScreen extends JPanel {
     private ArrayList<Hornet> hornets;
     private ArrayList<Flower> flowers;
     private SoliderAnt soliderAnt; // temporary for tests
+    private ArrayList<Food> food;
 
 
     public SimScreen() {
@@ -72,148 +74,164 @@ public class SimScreen extends JPanel {
             map[flowerPosY][flowerPosX] = 4;
         }
 
-        // add ants to map
-        System.out.println(numberOfAnts);
-        ants = new ArrayList<>();
-        for (int i = 0; i < numberOfAnts; i++) {
-            ants.add(new Ant(nestPosX + 1, nestPosY + 1));
-            map[ants.get(i).getY()][ants.get(i).getX()] = 1;
-        }
-
-        //add solider ant to map temporary
-        random = new Random();
-        soliderAnt = new SoliderAnt(nestPosX + 1, nestPosY);
-        map[soliderAnt.getY()][soliderAnt.getX()] = 5;
-        // add hornets to map
-        System.out.println(numberOfHornets);
-        hornets = new ArrayList<>();
-        for (int i = 0; i < numberOfHornets; i++) {
+        // add food
+        food = new ArrayList<>();
+        for (int i = 0; i < numberOfFood; i++) {
             random = new Random();
-            int hornetPosY = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
-            int hornetPosX = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
-            hornets.add(new Hornet(hornetPosX, hornetPosY));
-            map[hornetPosY][hornetPosX] = 3;
+            int foodPosX = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
+            int foodPosY = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
+            food.add(new Food(foodPosX, foodPosY));
+            map[foodPosY][foodPosX] = 6;
         }
-    }
 
-    //render the game
-    private void render(Graphics g) {
-        drawGrid(g);
-
-        // draw cells
-        for (int i = 0; i < HEIGHT / BLOCKSIZE; i++) {
-            for (int j = 0; j < WIDTH / BLOCKSIZE; j++) {
-
-                //clear unused cells
-                jPanelMap[i][j].setVisible(false);
-
-                //draw ants
-                if (map[i][j] == 1) {
-                    jPanelMap[i][j].setVisible(true);
-                    jPanelMap[i][j].setBackground(Color.BLACK);
-                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
-                    this.add(jPanelMap[i][j]);
-                }
-
-                //draw nest
-                if (map[i][j] == 2) {
-                    jPanelMap[i][j].setVisible(true);
-                    jPanelMap[i][j].setBackground(Color.GREEN);
-                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
-                    this.add(jPanelMap[i][j]);
-                }
-
-                //draw hornets
-                if (map[i][j] == 3) {
-                    jPanelMap[i][j].setVisible(true);
-                    jPanelMap[i][j].setBackground(Color.RED);
-                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
-                    this.add(jPanelMap[i][j]);
-                }
-
-                //draw flowers
-                if (map[i][j] == 4) {
-                    jPanelMap[i][j].setVisible(true);
-                    jPanelMap[i][j].setBackground(Color.YELLOW);
-                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
-                    this.add(jPanelMap[i][j]);
-                }
-                //draw solider ant
-                if (map[i][j] == 5) {
-                    jPanelMap[i][j].setVisible(true);
-                    jPanelMap[i][j].setBackground(Color.DARK_GRAY);
-                    jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
-                    this.add(jPanelMap[i][j]);
-                }
-            }
-        }
-    }
-
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        render(g);
-    }
-
-    public void update() {
-        if (running) {
-            steps++;
-            //update ants
+            // add ants to map
+            System.out.println(numberOfAnts);
+            ants = new ArrayList<>();
             for (int i = 0; i < numberOfAnts; i++) {
-                map[ants.get(i).getY()][ants.get(i).getX()] = 0;
-                ants.get(i).movement(map);
+                ants.add(new Ant(nestPosX + 1, nestPosY + 1));
                 map[ants.get(i).getY()][ants.get(i).getX()] = 1;
             }
-            //update solider ants
-            map[soliderAnt.getY()][soliderAnt.getX()] = 0;
-            soliderAnt.movement(map);
+
+            //add solider ant to map temporary
+            random = new Random();
+            soliderAnt = new SoliderAnt(nestPosX + 1, nestPosY);
             map[soliderAnt.getY()][soliderAnt.getX()] = 5;
 
-
-            //update hornets
+            // add hornets to map
+            System.out.println(numberOfHornets);
+            hornets = new ArrayList<>();
             for (int i = 0; i < numberOfHornets; i++) {
-                map[hornets.get(i).getY()][hornets.get(i).getX()] = 0;
-                hornets.get(i).movement(map);
-                map[hornets.get(i).getY()][hornets.get(i).getX()] = 3;
+                random = new Random();
+                int hornetPosY = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
+                int hornetPosX = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
+                hornets.add(new Hornet(hornetPosX, hornetPosY));
+                map[hornetPosY][hornetPosX] = 3;
+            }
+        }
+
+        //render the game
+        private void render (Graphics g){
+            drawGrid(g);
+
+            // draw cells
+            for (int i = 0; i < HEIGHT / BLOCKSIZE; i++) {
+                for (int j = 0; j < WIDTH / BLOCKSIZE; j++) {
+
+                    //clear unused cells
+                    jPanelMap[i][j].setVisible(false);
+
+                    //draw ants
+                    if (map[i][j] == 1) {
+                        jPanelMap[i][j].setVisible(true);
+                        jPanelMap[i][j].setBackground(Color.BLACK);
+                        jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
+                        this.add(jPanelMap[i][j]);
+                    }
+
+                    //draw nest
+                    if (map[i][j] == 2) {
+                        jPanelMap[i][j].setVisible(true);
+                        jPanelMap[i][j].setBackground(Color.GREEN);
+                        jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
+                        this.add(jPanelMap[i][j]);
+                    }
+
+                    //draw hornets
+                    if (map[i][j] == 3) {
+                        jPanelMap[i][j].setVisible(true);
+                        jPanelMap[i][j].setBackground(Color.RED);
+                        jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
+                        this.add(jPanelMap[i][j]);
+                    }
+
+                    //draw flowers
+                    if (map[i][j] == 4) {
+                        jPanelMap[i][j].setVisible(true);
+                        jPanelMap[i][j].setBackground(Color.YELLOW);
+                        jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
+                        this.add(jPanelMap[i][j]);
+                    }
+
+                    //draw solider ant
+                    if (map[i][j] == 5) {
+                        jPanelMap[i][j].setVisible(true);
+                        jPanelMap[i][j].setBackground(Color.DARK_GRAY);
+                        jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
+                        this.add(jPanelMap[i][j]);
+                    }
+                    //draw food
+                    if (map[i][j] == 6) {
+                        jPanelMap[i][j].setVisible(true);
+                        jPanelMap[i][j].setBackground(Color.PINK);
+                        jPanelMap[i][j].setBounds(j * BLOCKSIZE + 1, i * BLOCKSIZE + 1 + offsetOfHeight, BLOCKSIZE - 1, BLOCKSIZE - 1);
+                        this.add(jPanelMap[i][j]);
+                    }
+                }
             }
 
-            this.repaint(); //redraw the screen
+        }
+        public void paintComponent (Graphics g){
+            super.paintComponent(g);
+            render(g);
+        }
+
+        public void update () {
+            if (running) {
+                steps++;
+                //update ants
+                for (int i = 0; i < numberOfAnts; i++) {
+                    ants.get(i).update(map);
+                }
+                //update solider ants
+                map[soliderAnt.getY()][soliderAnt.getX()] = 0;
+                soliderAnt.movement(map);
+                map[soliderAnt.getY()][soliderAnt.getX()] = 5;
+
+
+                //update hornets
+                for (int i = 0; i < numberOfHornets; i++) {
+                    hornets.get(i).update(map);
+                }
+
+                this.repaint(); //redraw the screen
+            }
+        }
+
+        private void drawGrid (Graphics g){
+            //draw vertical lines
+            for (int i = 0; i <= WIDTH / BLOCKSIZE; i++)
+                g.drawLine(i * BLOCKSIZE, offsetOfHeight, i * BLOCKSIZE, HEIGHT + offsetOfHeight);
+            //draw horizontal lines
+            for (int i = 0; i <= HEIGHT / BLOCKSIZE; i++)
+                g.drawLine(1, i * BLOCKSIZE + offsetOfHeight, WIDTH, i * BLOCKSIZE + offsetOfHeight);
+        }
+
+        public boolean isRunning () {
+            return running;
+        }
+
+        public void setRunning ( boolean running){
+            this.running = running;
+        }
+
+        public int getSteps () {
+            return steps;
+        }
+
+        public void resetSteps () {
+            this.steps = 0;
+        }
+
+        public void setNumberOfAnts ( int numberOfAnts){
+            this.numberOfAnts = numberOfAnts;
+        }
+
+        public void setNumberOfFlowers ( int numberOfFlowers){
+            this.numberOfFlowers = numberOfFlowers;
+        }
+
+        public void setNumberOfHornets ( int numberOfHornets){
+            this.numberOfHornets = numberOfHornets;
         }
     }
 
-    private void drawGrid(Graphics g) {
-        //draw vertical lines
-        for (int i = 0; i <= WIDTH / BLOCKSIZE; i++)
-            g.drawLine(i * BLOCKSIZE, offsetOfHeight, i * BLOCKSIZE, HEIGHT + offsetOfHeight);
-        //draw horizontal lines
-        for (int i = 0; i <= HEIGHT / BLOCKSIZE; i++)
-            g.drawLine(1, i * BLOCKSIZE + offsetOfHeight, WIDTH, i * BLOCKSIZE + offsetOfHeight);
-    }
-
-    public boolean isRunning() {
-        return running;
-    }
-
-    public void setRunning(boolean running) {
-        this.running = running;
-    }
-
-    public int getSteps() {
-        return steps;
-    }
-
-    public void resetSteps() {
-        this.steps = 0;
-    }
-
-    public void setNumberOfAnts(int numberOfAnts) {
-        this.numberOfAnts = numberOfAnts;
-    }
-
-    public void setNumberOfFlowers(int numberOfFlowers) {
-        this.numberOfFlowers = numberOfFlowers;
-    }
-
-    public void setNumberOfHornets(int numberOfHornets) {
-        this.numberOfHornets = numberOfHornets;
-    }
-}

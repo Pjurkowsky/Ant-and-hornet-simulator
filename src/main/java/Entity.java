@@ -38,6 +38,8 @@ abstract class Entity {
     protected int y = 0;
     private Random random = new Random();
 
+    protected int map[][];
+
 
     private void changeDir() {
         direction = Direction.fromInteger(random.nextInt(9));
