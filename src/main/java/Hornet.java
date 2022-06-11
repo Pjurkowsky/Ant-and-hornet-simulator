@@ -1,38 +1,51 @@
-public class Hornet extends Entity {
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
 
-
+public class Hornet extends Insect implements Entity {
+    Random random;
     Hornet(int x, int y) {
-        this.x = x;
-        this.y = y;
+        super(x, y);
+        model.setBackground(Color.RED);
     }
 
-    private void attak() {
-        //boolean hasattacked = false;
-        for (int i = getY() - 1; i < getY() + 1; i++) {
-            if (getY() - 1 < 0)
-                continue;
-            if (getY() + 1 > map.length)
-                continue;
-            for (int j = getX() - 1; j < getX() + 1; j++) {
-                if (getX() - 1 < 0)
-                    continue;
-                if (getX() + 1 > map[i].length)
-                    continue;
+    private Entity attack(ArrayList<Entity> map) {
 
-                if (map[i][j] == 1 ) {
-                    map[i][j] = 0;
-                    //hasattacked = true;
+        for (Entity entity: map) {
+            Rectangle ant = (Rectangle) entity;
+            if ((ant.getName() == "Ant" || ant.getName() == "SoliderAnt") && ant.getX() == getX() && ant.getY() == getY()) {
+
+                random = new Random();
+                if ( random.nextDouble() > 0.5){
+                    System.out.println( ant.getName());
+                    return entity;
                 }
+
+
+                else
+                    return null;
             }
         }
+        return null;
     }
 
-    public int[][] update(int map[][]) {
-        this.map = map;
-        map[getY()][getX()] = 0;
-        movement(map);
-        map[getY()][getX()] = 3;
-        attak();
-        return map;
+    @Override
+    public JPanel draw() {
+        model.setBounds(x * SimScreen.BLOCKSIZE + 1, y * SimScreen.BLOCKSIZE + 1 + SimScreen.offsetOfHeight, SimScreen.BLOCKSIZE - 1, SimScreen.BLOCKSIZE - 1);
+        return model;
+    }
+
+    @Override
+    public Entity update(ArrayList<Entity> map) {
+        movement();
+
+        return attack( map);
+    }
+
+    @Override
+    public String getName() {
+        return "Hornet";
     }
 }

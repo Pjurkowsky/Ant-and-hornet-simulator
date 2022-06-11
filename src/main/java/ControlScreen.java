@@ -36,6 +36,14 @@ public class ControlScreen extends JPanel implements ActionListener {
     JLabel setFpsText;
     JTextField setFpsTextField;
 
+    JLabel currentAntsNumberText;
+    JLabel currentHornetsNumberText;
+    JLabel currentSoliderAntsNumberText;
+    JLabel currentFlowersNumberText;
+    JLabel currentFoodNumberText;
+
+    JPanel ant, hornet, flower, soliderAnt, food;
+
     SimScreen simScreen;
     Simulation simulation;
 
@@ -55,6 +63,7 @@ public class ControlScreen extends JPanel implements ActionListener {
     private int numberOfAnts = 0;
     private int numberOfHornets = 0;
     private int numberOfFlowers = 0;
+    private int numberOfFood = 0;
 
 
 
@@ -168,10 +177,70 @@ public class ControlScreen extends JPanel implements ActionListener {
         setFpsTextField.setBounds(xTextField, y, textFieldWidth, textFieldHeight);
         setFpsTextField.addActionListener(this);
         this.add(setFpsTextField);
+
+        y += 40;
+
+        ant = new JPanel();
+        ant.setBackground(Color.BLACK);
+        ant.setBounds(15, y + 6 , SimScreen.BLOCKSIZE, SimScreen.BLOCKSIZE);
+        this.add(ant);
+
+        currentAntsNumberText = new JLabel("Ants: ");
+        currentAntsNumberText.setBounds(40, y, labelWidth, labelHeight);
+        this.add(currentAntsNumberText);
+
+        y += 40;
+
+        hornet = new JPanel();
+        hornet.setBackground(Color.RED);
+        hornet.setBounds(15, y + 6 , SimScreen.BLOCKSIZE, SimScreen.BLOCKSIZE);
+        this.add(hornet);
+
+        currentHornetsNumberText = new JLabel("Hornets: ");
+        currentHornetsNumberText.setBounds(40, y, labelWidth, labelHeight);
+        this.add(currentHornetsNumberText);
+
+        y += 40;
+
+        soliderAnt = new JPanel();
+        soliderAnt.setBackground(Color.DARK_GRAY);
+        soliderAnt.setBounds(15, y + 6 , SimScreen.BLOCKSIZE, SimScreen.BLOCKSIZE);
+        this.add(soliderAnt);
+
+        currentSoliderAntsNumberText = new JLabel("Solider ants: ");
+        currentSoliderAntsNumberText.setBounds(40, y, labelWidth, labelHeight);
+        this.add(currentSoliderAntsNumberText);
+
+        y += 40;
+
+        flower = new JPanel();
+        flower.setBackground(Color.YELLOW);
+        flower.setBounds(15, y + 6 , SimScreen.BLOCKSIZE, SimScreen.BLOCKSIZE);
+        this.add(flower);
+
+        currentFlowersNumberText = new JLabel("Flowers: ");
+        currentFlowersNumberText.setBounds(40, y, labelWidth, labelHeight);
+        this.add(currentFlowersNumberText);
+
+        y += 40;
+
+        food = new JPanel();
+        food.setBackground(Color.PINK);
+        food.setBounds(15, y + 6 , SimScreen.BLOCKSIZE, SimScreen.BLOCKSIZE);
+        this.add(food);
+
+        currentFoodNumberText = new JLabel("Food: ");
+        currentFoodNumberText.setBounds(40, y, labelWidth, labelHeight);
+        this.add(currentFoodNumberText);
     }
 
     public void update() {
         stepsText.setText("Steps: " + simScreen.getSteps());
+        currentAntsNumberText.setText("Ants: " + simScreen.getNumberOfAnts());
+        currentHornetsNumberText.setText("Hornets: " + simScreen.getNumberOfHornets());
+        currentFlowersNumberText.setText("Flowers: " + simScreen.getNumberOfFlowers());
+        currentSoliderAntsNumberText.setText("Solider Ants: " + simScreen.getNumberOfSoliderAnts());
+        currentFoodNumberText.setText("Food: " + simScreen.getNumberOfFood());
     }
 
     public void updateParameters(ArrayList<Integer> parameters) {
@@ -182,17 +251,21 @@ public class ControlScreen extends JPanel implements ActionListener {
 
         numberOfAnts = parameters.get(1);
         antsNumberTextField.setText(Integer.toString(numberOfAnts));
+        currentAntsNumberText.setText("Ants: " + numberOfAnts);
         simScreen.setNumberOfAnts(numberOfAnts);
 
         numberOfHornets = parameters.get(2);
         simScreen.setNumberOfHornets(numberOfHornets);
+        currentHornetsNumberText.setText("Hornets: " + numberOfHornets);
         hornetNumberTextField.setText(Integer.toString(numberOfHornets));
 
         numberOfFlowers = parameters.get(3);
         simScreen.setNumberOfFlowers(numberOfFlowers);
+        currentFlowersNumberText.setText("Flowers: " + numberOfFlowers);
         flowerNumberTextField.setText(Integer.toString(numberOfFlowers));
 
-
+        currentSoliderAntsNumberText.setText("Solider Ants: 0");
+        currentFoodNumberText.setText(Integer.toString(numberOfFood));
 
     }
 
@@ -202,14 +275,12 @@ public class ControlScreen extends JPanel implements ActionListener {
         if (e.getSource() == startButton && !simScreen.isRunning()) {
             simScreen.setRunning(true);
             if (simScreen.getSteps() == simulation.getSetSteps()) {
-                simScreen.resetSteps();
                 simScreen.init();
             }
 
         }
         if (e.getSource() == stopButton) {
             if (!simScreen.isRunning()) {
-                simScreen.resetSteps();
                 simScreen.init();
             }
             simScreen.setRunning(false);
@@ -266,10 +337,6 @@ public class ControlScreen extends JPanel implements ActionListener {
                 updateParameters(Parameters.getParameters(0));
             }
         }
-
-
     }
-
-
 }
 
