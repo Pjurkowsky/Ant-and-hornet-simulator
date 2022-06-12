@@ -14,7 +14,7 @@ public class SoliderAnt extends Ant {
     private Entity attack(ArrayList<Entity> map) {
 
         for (Entity entity : map) {
-            Rectangle hornet = (Rectangle) entity;
+            Entity hornet = entity;
 
             if (hornet.getName() == "Hornet" && hornet.getX() == getX() && hornet.getY() == getY()) {
                 random = new Random();

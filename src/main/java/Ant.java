@@ -1,39 +1,63 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 
-public class Ant extends Insect implements Entity {
+public class Ant extends Insect {
 
+    private int nestPosX, nestPosY;
 
     private boolean hasFood = false;
 
     Ant(int x, int y) {
         super(x, y);
+        nestPosX = x;
+        nestPosY = y;
         model.setBackground(Color.BLACK);
-
-
     }
 
     // 0 0 0
     // 0 1 0
     // 0 0 0
     private Entity eat(ArrayList<Entity> map) {
-
-        for (Entity entity: map) {
-            Rectangle food = (Rectangle) entity;
-            if (food.getName() == "Food" && food.getX() == getX() && food.getY() == getY()) {
-                System.out.println(food.getName());
+        for (Entity entity : map) {
+            Entity food = entity;
+            if (food.getName() == "Food" && food.getX() == getX() && food.getY() == getY() && !hasFood) {
+                hasFood = true;
                 return entity;
             }
         }
         return null;
     }
 
+    private void toNest() {
+        double dx = getX() - nestPosX;
+        double dy = getY() - nestPosY;
 
-    public boolean hasFood() {
-        return hasFood;
+        System.out.println("dx: " + dx);
+        System.out.println("dy: " + dy);
+
+        if (dx > 0 && dy > 0)
+            direction = Direction.TOPLEFT;
+        else if (dx == 0 && dy > 0)
+            direction = Direction.TOP;
+        else if (dx < 0 && dy > 0)
+            direction = Direction.TOPRIGHT;
+        else if (dy == 0 && dx > 0)
+            direction = Direction.LEFT;
+        else if (dy == 0 && dx < 0)
+            direction = Direction.RIGHT;
+        else if (dx > 0 && dy < 0)
+            direction = Direction.BOTTOMLEFT;
+        else if (dx == 0 && dy < 0)
+            direction = Direction.BOTTOM;
+        else if (dy < 0 && dx < 0)
+            direction = Direction.BOTTOMRIGHT;
+        else if (dy == 0 && dx == 0)
+            direction = Direction.CENTRE;
+
+
     }
+
 
     @Override
     public JPanel draw() {
@@ -43,7 +67,14 @@ public class Ant extends Insect implements Entity {
 
     @Override
     public Entity update(ArrayList<Entity> map) {
+        if (!hasFood) {
+            changeDir();
+        }
+        if (hasFood) {
+            toNest();
+        }
         movement();
+
         return eat(map);
     }
 
@@ -51,4 +82,14 @@ public class Ant extends Insect implements Entity {
     public String getName() {
         return "Ant";
     }
+
+    public boolean hasFood() {
+        return hasFood;
+    }
+
+    public void setFood(boolean food) {
+        hasFood = food;
+    }
+
+
 }

@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Flower extends Rectangle implements Entity {
+public class Flower extends Entity {
 
     Flower(int x, int y) {
         super(x, y);

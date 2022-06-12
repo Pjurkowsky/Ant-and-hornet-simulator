@@ -3,7 +3,6 @@ import java.awt.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Random;
 
 public class SimScreen extends JPanel {
@@ -25,8 +24,8 @@ public class SimScreen extends JPanel {
     private int setNumberOfAnts = 0;
     private int setNumberOfHornets = 0;
     private int setNumberOfFlowers= 0;
-    private int setNumberOfFood = 9;
-    private int setNumberOfSoliderAnts = 10;
+    private int setNumberOfFood = 30;
+    private int setNumberOfSoliderAnts = 0;
 
     private int numberOfAnts = setNumberOfAnts;
     private int numberOfHornets = setNumberOfHornets;
@@ -60,14 +59,14 @@ public class SimScreen extends JPanel {
             this.remove(itr.next().draw());
         map.clear();
 
-        // add nest to the map
+        // add nest and ants to the map
         random = new Random();
         int nestPosY = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
         int nestPosX = random.nextInt(WIDTH - BLOCKSIZE) / BLOCKSIZE;
-        nest = new Nest(nestPosX, nestPosY);
-        map.add(nest);
+        nest = new Nest(nestPosX, nestPosY, setNumberOfAnts, map); // nest adds himself to the map
 
-//        // add flowers
+
+      // add flowers
 
         for (int i = 0; i < setNumberOfFlowers; i++) {
             random = new Random();
@@ -76,7 +75,7 @@ public class SimScreen extends JPanel {
             map.add(new Flower(flowerPosX, flowerPosY));
         }
 
-//        // add food
+        // add food
         for (int i = 0; i < setNumberOfFood; i++) {
             random = new Random();
             int foodPosX = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
@@ -84,14 +83,7 @@ public class SimScreen extends JPanel {
             map.add(new Food(foodPosX, foodPosY));
         }
 
-        // add ants to map
-        for (int i = 0; i < setNumberOfAnts; i++) {
-            map.add(new Ant(nestPosX + 1, nestPosY + 1));
-        }
-        for (int i = 0; i < setNumberOfSoliderAnts; i++) {
-            map.add(new SoliderAnt(nestPosX + 1, nestPosY + 1));
-        }
-//        // add hornets to map
+        // add hornets to map
         for (int i = 0; i < setNumberOfHornets; i++) {
             random = new Random();
             int hornetPosY = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
@@ -120,21 +112,21 @@ public class SimScreen extends JPanel {
             steps++;
             ArrayList<Entity> entitiesToDelete = new ArrayList<>();
             //updates all entities
-            for (Iterator<Entity> itr = map.iterator(); itr.hasNext(); ) {
-                Entity entity = itr.next().update(map);
+            for (int i = 0; i < map.size(); i++) {
+                Entity entity = map.get(i).update(map);
                 if (entity != null)
                     entitiesToDelete.add(entity);
             }
 
             // delete dead entities
             for (Entity entity : entitiesToDelete) {
-                if(((Rectangle) entity).getName() == "Ant")
+                if(((Entity) entity).getName() == "Ant")
                     numberOfAnts--;
-                else if(((Rectangle) entity).getName() == "SoliderAnt")
+                else if(((Entity) entity).getName() == "SoliderAnt")
                     numberOfSoliderAnts--;
-                else if(((Rectangle) entity).getName() == "Food")
+                else if(((Entity) entity).getName() == "Food")
                     numberOfFood--;
-                else if(((Rectangle) entity).getName() == "Hornet")
+                else if(((Entity) entity).getName() == "Hornet")
                     numberOfHornets--;
                 this.remove(entity.draw());
                 map.remove(entity);
@@ -179,6 +171,10 @@ public class SimScreen extends JPanel {
         this.setNumberOfHornets = numberOfHornets;
     }
 
+    public void setNumberOfSoliderAnts(int numberOfSoliderAnts) {
+        this.numberOfSoliderAnts = numberOfSoliderAnts;
+    }
+
     public int getNumberOfAnts() {
         return numberOfAnts;
     }
@@ -197,6 +193,10 @@ public class SimScreen extends JPanel {
 
     public int getNumberOfFood() {
         return numberOfFood;
+    }
+
+    public int getNumberOfFoodInNest() {
+        return nest.getFoodAmount();
     }
 }
 

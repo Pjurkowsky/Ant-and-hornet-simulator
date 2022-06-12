@@ -1,10 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 
-public class Hornet extends Insect implements Entity {
+public class Hornet extends Insect {
     Random random;
     Hornet(int x, int y) {
         super(x, y);
@@ -14,7 +13,7 @@ public class Hornet extends Insect implements Entity {
     private Entity attack(ArrayList<Entity> map) {
 
         for (Entity entity: map) {
-            Rectangle ant = (Rectangle) entity;
+            Entity ant = entity;
             if ((ant.getName() == "Ant" || ant.getName() == "SoliderAnt") && ant.getX() == getX() && ant.getY() == getY()) {
 
                 random = new Random();
@@ -39,6 +38,7 @@ public class Hornet extends Insect implements Entity {
 
     @Override
     public Entity update(ArrayList<Entity> map) {
+        changeDir();
         movement();
 
         return attack( map);

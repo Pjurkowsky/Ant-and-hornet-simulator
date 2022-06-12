@@ -41,8 +41,9 @@ public class ControlScreen extends JPanel implements ActionListener {
     JLabel currentSoliderAntsNumberText;
     JLabel currentFlowersNumberText;
     JLabel currentFoodNumberText;
+    JLabel currentFoodInNestNumberText;
 
-    JPanel ant, hornet, flower, soliderAnt, food;
+    JPanel ant, hornet, flower, soliderAnt, food, nest;
 
     SimScreen simScreen;
     Simulation simulation;
@@ -232,6 +233,18 @@ public class ControlScreen extends JPanel implements ActionListener {
         currentFoodNumberText = new JLabel("Food: ");
         currentFoodNumberText.setBounds(40, y, labelWidth, labelHeight);
         this.add(currentFoodNumberText);
+
+
+        y += 40;
+        nest = new JPanel();
+        nest.setBackground(Color.GREEN);
+        nest.setBounds(15, y + 6 , SimScreen.BLOCKSIZE, SimScreen.BLOCKSIZE);
+        this.add(nest);
+
+        currentFoodInNestNumberText = new JLabel("Food in nest: ");
+        currentFoodInNestNumberText.setBounds(40, y, labelWidth, labelHeight);
+        this.add(currentFoodInNestNumberText);
+
     }
 
     public void update() {
@@ -241,6 +254,7 @@ public class ControlScreen extends JPanel implements ActionListener {
         currentFlowersNumberText.setText("Flowers: " + simScreen.getNumberOfFlowers());
         currentSoliderAntsNumberText.setText("Solider Ants: " + simScreen.getNumberOfSoliderAnts());
         currentFoodNumberText.setText("Food: " + simScreen.getNumberOfFood());
+        currentFoodInNestNumberText.setText("Food in nest: " + simScreen.getNumberOfFoodInNest());
     }
 
     public void updateParameters(ArrayList<Integer> parameters) {
