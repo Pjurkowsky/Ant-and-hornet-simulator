@@ -67,7 +67,6 @@ public class SimScreen extends JPanel {
 
 
         // add flowers
-
         for (int i = 0; i < setNumberOfFlowers; i++) {
             random = new Random();
             int flowerPosX = random.nextInt(HEIGHT - BLOCKSIZE) / BLOCKSIZE;
@@ -83,7 +82,6 @@ public class SimScreen extends JPanel {
             map.add(new Food(foodPosX, foodPosY));
         }
 
-
         // add hornets to map
         for (int i = 0; i < setNumberOfHornets; i++) {
             random = new Random();
@@ -98,7 +96,6 @@ public class SimScreen extends JPanel {
         drawGrid(g);
 
         // draw cells
-
         for (int i = 0; i < map.size(); i++) {
             this.add(map.get(i).draw());
         }

@@ -8,13 +8,10 @@ public class Food extends Entity {
         model.setBackground(Color.PINK);
     }
 
-
-
     @Override
     public Object[] update(ArrayList<Entity> map) {
         return new Object[]{null, false};
     }
-
     @Override
     public String getName() {
         return "Food";

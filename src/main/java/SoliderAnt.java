@@ -11,10 +11,10 @@ public class SoliderAnt extends Ant {
         model.setBackground(Color.DARK_GRAY);
     }
 
-
     private Entity attack(ArrayList<Entity> map) {
 
-        for (Entity entity : map) {
+        for (int i = 0; i < map.size(); i++) {
+            Entity entity = map.get(i);
             if (entity.getName() == "Hornet" && entity.getX() == getX() && entity.getY() == getY()) {
                 random = new Random();
                 if (random.nextDouble() > 0.5)
@@ -25,7 +25,6 @@ public class SoliderAnt extends Ant {
         }
         return null;
     }
-
 
     @Override
     public Object[] update(ArrayList<Entity> map) {

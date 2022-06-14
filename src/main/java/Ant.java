@@ -15,9 +15,9 @@ public class Ant extends Insect {
         model.setBackground(Color.BLACK);
     }
 
-
     private Entity eat(ArrayList<Entity> map) {
-        for (Entity entity : map) {
+        for (int i = 0; i < map.size(); i++) {
+            Entity entity = map.get(i);
             if (entity.getName() == "Food" && entity.getX() == getX() && entity.getY() == getY() && !hasFood) {
                 hasFood = true;
                 return entity;
@@ -25,8 +25,6 @@ public class Ant extends Insect {
         }
         return null;
     }
-
-
 
     private void goTo(int posX, int posY) {
         int dx = getX() - posX;
@@ -53,7 +51,6 @@ public class Ant extends Insect {
     }
 
 
-
     @Override
     public Object[] update(ArrayList<Entity> map) {
         if (!hasFood) {
@@ -62,7 +59,6 @@ public class Ant extends Insect {
             if(hornet != null && calcDistance(hornet.getX(), hornet.getY()) < 4){
                 Entity flower = checkForClosest(map, "Flower");
                 goTo(flower.getX(),flower.getY());
-
                 model.setBackground(Color.BLUE);
             }
             else

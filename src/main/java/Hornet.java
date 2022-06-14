@@ -12,8 +12,8 @@ public class Hornet extends Insect {
     }
 
     private Entity attack(ArrayList<Entity> map) {
-
-        for (Entity entity : map) {
+        for (int i = 0; i < map.size(); i++) {
+            Entity entity = map.get(i);
             if ((entity.getName() == "Ant" || entity.getName() == "SoliderAnt") && entity.getX() == getX() && entity.getY() == getY()) {
                 random = new Random();
                 if (random.nextDouble() > 0.5) {
@@ -29,24 +29,18 @@ public class Hornet extends Insect {
 
     @Override
     public Object[] update(ArrayList<Entity> map) {
-
         Entity flower = checkForClosest(map, "Flower");
         if (flower != null && calcDistance(flower.getX(), flower.getY()) <= 4) {
-
             int dir = Direction.toInteger(direction);
-            System.out.println("dir: " +dir);
             dir += 6;
             dir %= 8;
-
             direction = Direction.fromInteger(dir);
-            System.out.println("dir2: " + Direction.toInteger(direction));
             model.setBackground(Color.CYAN);
         }
         else {
             changeDir();
             model.setBackground(Color.RED);
         }
-
 
         movement();
         return new Object[] { attack(map), false};

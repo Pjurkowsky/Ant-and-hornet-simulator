@@ -355,7 +355,6 @@ public class ControlScreen extends JPanel implements ActionListener {
         //set steps if enter on text field is pressed
         if (e.getSource() == stepSetTextField) {
             try {
-                System.out.println(Integer.parseInt(stepSetTextField.getText()));
                 simulation.setSetSteps(Integer.parseInt(stepSetTextField.getText()));
             } catch (NumberFormatException er) {
                 simulation.setSetSteps(0);
