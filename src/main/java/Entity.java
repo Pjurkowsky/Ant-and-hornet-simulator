@@ -23,8 +23,12 @@ abstract class Entity {
         return "Rectangle";
     }
 
-    abstract JPanel draw();
-    abstract Entity update(ArrayList<Entity> map);
+    public JPanel draw() {
+        model.setBounds(x * SimScreen.BLOCKSIZE + 1, y * SimScreen.BLOCKSIZE + 1 + SimScreen.offsetOfHeight, SimScreen.BLOCKSIZE - 1, SimScreen.BLOCKSIZE - 1);
+        return model;
+    }
+
+    abstract Object[] update(ArrayList<Entity> map);
 
 
 }

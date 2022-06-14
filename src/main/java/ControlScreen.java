@@ -19,6 +19,9 @@ public class ControlScreen extends JPanel implements ActionListener {
     JLabel flowerNumberText;
     JTextField flowerNumberTextField;
 
+    JLabel foodNumberText;
+    JTextField foodNumberTextField;
+
     JLabel dataFromFileText;
     JTextField dataFromFileTextField;
 
@@ -114,6 +117,17 @@ public class ControlScreen extends JPanel implements ActionListener {
         flowerNumberTextField.setBounds(xTextField, y, textFieldWidth, textFieldHeight);
         flowerNumberTextField.addActionListener(this);
         this.add(flowerNumberTextField);
+
+        y += 40;
+
+        foodNumberText = new JLabel("Food number: ");
+        foodNumberText.setBounds(xLabel, y, labelWidth, labelHeight);
+        this.add(foodNumberText);
+
+        foodNumberTextField = new JTextField();
+        foodNumberTextField.setBounds(xTextField, y, textFieldWidth, textFieldHeight);
+        foodNumberTextField.addActionListener(this);
+        this.add(foodNumberTextField);
 
         y += 40;
 
@@ -278,6 +292,10 @@ public class ControlScreen extends JPanel implements ActionListener {
         currentFlowersNumberText.setText("Flowers: " + numberOfFlowers);
         flowerNumberTextField.setText(Integer.toString(numberOfFlowers));
 
+        numberOfFood = parameters.get(4);
+        simScreen.setNumberOfFood(numberOfFood);
+        foodNumberTextField.setText(Integer.toString(numberOfFood));
+
         currentSoliderAntsNumberText.setText("Solider Ants: 0");
         currentFoodNumberText.setText(Integer.toString(numberOfFood));
 
@@ -324,6 +342,14 @@ public class ControlScreen extends JPanel implements ActionListener {
                 simScreen.setNumberOfFlowers(Integer.parseInt(flowerNumberTextField.getText()));
             } catch (NumberFormatException er) {
                 simScreen.setNumberOfFlowers(0);
+            }
+        }
+        //set number of food if enter on text field is pressed
+        if (e.getSource() == foodNumberTextField) {
+            try {
+                simScreen.setNumberOfFood(Integer.parseInt(foodNumberTextField.getText()));
+            } catch (NumberFormatException er) {
+                simScreen.setNumberOfFood(0);
             }
         }
         //set steps if enter on text field is pressed

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 abstract class Insect extends Entity {
@@ -29,6 +30,29 @@ abstract class Insect extends Entity {
             y = 0;
         else if (y >= maxYPos)
             y = maxYPos - 1;
+    }
+
+
+
+    protected double calcDistance(int posX, int posY) {
+        return Math.sqrt((getX() - posX) * (getX() - posX) + (getY() - posY) * (getY() - posY));
+    }
+
+    protected Entity checkForClosest(ArrayList<Entity> map, String entityName) {
+        double minDistance = SimScreen.WIDTH;
+        Entity minEntity = null;
+
+        for (int i = 0; i < map.size(); i++) {
+            Entity entity = map.get(i);
+            if (entity.getName() == entityName) {
+                if (calcDistance(entity.getX(), entity.getY()) <= minDistance){
+                    minEntity = entity;
+                    minDistance = calcDistance(entity.getX(), entity.getY());
+                }
+
+            }
+        }
+        return minEntity;
     }
 
     protected void movement() {

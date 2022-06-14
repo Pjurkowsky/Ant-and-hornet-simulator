@@ -15,13 +15,10 @@ public class Ant extends Insect {
         model.setBackground(Color.BLACK);
     }
 
-    // 0 0 0
-    // 0 1 0
-    // 0 0 0
+
     private Entity eat(ArrayList<Entity> map) {
         for (Entity entity : map) {
-            Entity food = entity;
-            if (food.getName() == "Food" && food.getX() == getX() && food.getY() == getY() && !hasFood) {
+            if (entity.getName() == "Food" && entity.getX() == getX() && entity.getY() == getY() && !hasFood) {
                 hasFood = true;
                 return entity;
             }
@@ -29,12 +26,11 @@ public class Ant extends Insect {
         return null;
     }
 
-    private void toNest() {
-        double dx = getX() - nestPosX;
-        double dy = getY() - nestPosY;
 
-        System.out.println("dx: " + dx);
-        System.out.println("dy: " + dy);
+
+    private void goTo(int posX, int posY) {
+        int dx = getX() - posX;
+        int dy = getY() - posY;
 
         if (dx > 0 && dy > 0)
             direction = Direction.TOPLEFT;
@@ -54,28 +50,31 @@ public class Ant extends Insect {
             direction = Direction.BOTTOMRIGHT;
         else if (dy == 0 && dx == 0)
             direction = Direction.CENTRE;
-
-
     }
 
 
-    @Override
-    public JPanel draw() {
-        model.setBounds(x * SimScreen.BLOCKSIZE + 1, y * SimScreen.BLOCKSIZE + 1 + SimScreen.offsetOfHeight, SimScreen.BLOCKSIZE - 1, SimScreen.BLOCKSIZE - 1);
-        return model;
-    }
 
     @Override
-    public Entity update(ArrayList<Entity> map) {
+    public Object[] update(ArrayList<Entity> map) {
         if (!hasFood) {
             changeDir();
+            Entity hornet = checkForClosest(map, "Hornet");
+            if(hornet != null && calcDistance(hornet.getX(), hornet.getY()) < 4){
+                Entity flower = checkForClosest(map, "Flower");
+                goTo(flower.getX(),flower.getY());
+
+                model.setBackground(Color.BLUE);
+            }
+            else
+                model.setBackground(Color.BLACK);
+
+
         }
         if (hasFood) {
-            toNest();
+            goTo(nestPosX, nestPosY);
         }
         movement();
-
-        return eat(map);
+        return new Object[] {eat(map), false};
     }
 
     @Override
@@ -90,6 +89,4 @@ public class Ant extends Insect {
     public void setFood(boolean food) {
         hasFood = food;
     }
-
-
 }

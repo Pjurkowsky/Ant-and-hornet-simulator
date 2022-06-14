@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
@@ -14,15 +15,10 @@ public class SoliderAnt extends Ant {
     private Entity attack(ArrayList<Entity> map) {
 
         for (Entity entity : map) {
-            Entity hornet = entity;
-
-            if (hornet.getName() == "Hornet" && hornet.getX() == getX() && hornet.getY() == getY()) {
+            if (entity.getName() == "Hornet" && entity.getX() == getX() && entity.getY() == getY()) {
                 random = new Random();
-
-                if (random.nextDouble() > 0.5){
-                    System.out.println("Hornet");
+                if (random.nextDouble() > 0.5)
                     return entity;
-                }
                 else
                     return null;
             }
@@ -30,10 +26,13 @@ public class SoliderAnt extends Ant {
         return null;
     }
 
+
     @Override
-    public Entity update(ArrayList<Entity> map) {
+    public Object[] update(ArrayList<Entity> map) {
+        changeDir();
         movement();
-        return attack(map);
+        return new Object[] {attack(map), false};
+
     }
 
     @Override

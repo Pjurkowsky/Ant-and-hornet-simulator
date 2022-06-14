@@ -23,8 +23,8 @@ public class SimScreen extends JPanel {
 
     private int setNumberOfAnts = 0;
     private int setNumberOfHornets = 0;
-    private int setNumberOfFlowers= 0;
-    private int setNumberOfFood = 30;
+    private int setNumberOfFlowers = 0;
+    private int setNumberOfFood = 0;
     private int setNumberOfSoliderAnts = 0;
 
     private int numberOfAnts = setNumberOfAnts;
@@ -48,7 +48,7 @@ public class SimScreen extends JPanel {
 
         //reset entities
         numberOfHornets = setNumberOfHornets;
-        numberOfFlowers =setNumberOfFlowers;
+        numberOfFlowers = setNumberOfFlowers;
         numberOfFood = setNumberOfFood;
         numberOfAnts = setNumberOfAnts;
         numberOfSoliderAnts = setNumberOfSoliderAnts;
@@ -66,7 +66,7 @@ public class SimScreen extends JPanel {
         nest = new Nest(nestPosX, nestPosY, setNumberOfAnts, map); // nest adds himself to the map
 
 
-      // add flowers
+        // add flowers
 
         for (int i = 0; i < setNumberOfFlowers; i++) {
             random = new Random();
@@ -83,6 +83,7 @@ public class SimScreen extends JPanel {
             map.add(new Food(foodPosX, foodPosY));
         }
 
+
         // add hornets to map
         for (int i = 0; i < setNumberOfHornets; i++) {
             random = new Random();
@@ -97,6 +98,7 @@ public class SimScreen extends JPanel {
         drawGrid(g);
 
         // draw cells
+
         for (int i = 0; i < map.size(); i++) {
             this.add(map.get(i).draw());
         }
@@ -111,28 +113,46 @@ public class SimScreen extends JPanel {
         if (running) {
             steps++;
             ArrayList<Entity> entitiesToDelete = new ArrayList<>();
+            ArrayList<Entity> entitiesToAdd = new ArrayList<>();
             //updates all entities
             for (int i = 0; i < map.size(); i++) {
-                Entity entity = map.get(i).update(map);
-                if (entity != null)
-                    entitiesToDelete.add(entity);
+                Object[] entityHandler = map.get(i).update(map);
+                if (entityHandler[0] != null) {
+                    if (!((boolean) entityHandler[1]))
+                        entitiesToDelete.add((Entity) entityHandler[0]);
+                    else if ((boolean) entityHandler[1])
+                        entitiesToAdd.add((Entity) entityHandler[0]);
+                }
+
             }
 
             // delete dead entities
             for (Entity entity : entitiesToDelete) {
-                if(((Entity) entity).getName() == "Ant")
+                if (entity.getName() == "Ant")
                     numberOfAnts--;
-                else if(((Entity) entity).getName() == "SoliderAnt")
+                else if (entity.getName() == "SoliderAnt")
                     numberOfSoliderAnts--;
-                else if(((Entity) entity).getName() == "Food")
+                else if (entity.getName() == "Food")
                     numberOfFood--;
-                else if(((Entity) entity).getName() == "Hornet")
+                else if (entity.getName() == "Hornet")
                     numberOfHornets--;
                 this.remove(entity.draw());
                 map.remove(entity);
-
             }
 
+            // add new entities
+            for (Entity entity : entitiesToAdd) {
+                if (entity.getName() == "Ant")
+                    numberOfAnts++;
+                else if (entity.getName() == "SoliderAnt")
+                    numberOfSoliderAnts++;
+                else if (entity.getName() == "Food")
+                    numberOfFood++;
+                else if (entity.getName() == "Hornet")
+                    numberOfHornets++;
+                this.add(entity.draw());
+                map.add(entity);
+            }
 
             this.repaint(); //redraw the screen
         }
@@ -173,6 +193,10 @@ public class SimScreen extends JPanel {
 
     public void setNumberOfSoliderAnts(int numberOfSoliderAnts) {
         this.numberOfSoliderAnts = numberOfSoliderAnts;
+    }
+
+    public void setNumberOfFood(int numberOfFood) {
+        this.setNumberOfFood = numberOfFood;
     }
 
     public int getNumberOfAnts() {

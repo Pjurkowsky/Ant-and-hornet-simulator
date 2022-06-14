@@ -20,40 +20,32 @@ public class Nest extends Entity {
         return foodAmount;
     }
 
-    private void spawnAnt(ArrayList<Entity> map) {
+    private Entity spawnAnt() {
         random = new Random();
-        if (random.nextDouble() >= 0.5) {
-            map.add(new SoliderAnt(getX(), getY()));
-
-        } else {
-            map.add(new Ant(getX(), getY()));
-        }
-        foodAmount -= 10;
-
-    }
-
-
-    @Override
-    public JPanel draw() {
-        model.setBounds(x * SimScreen.BLOCKSIZE + 1, y * SimScreen.BLOCKSIZE + 1 + SimScreen.offsetOfHeight, SimScreen.BLOCKSIZE - 1, SimScreen.BLOCKSIZE - 1);
-        return model;
+        if (random.nextDouble() >= 0.5)
+            return new Ant(getX(), getY());
+        else
+            return new SoliderAnt(getX(), getY());
     }
 
     @Override
-    public Entity update(ArrayList<Entity> map) {
-        for (Entity entity : map) {
-            if (entity.getName() == "Ant") {
-                Ant ant = (Ant) entity;
+    public Object[] update(ArrayList<Entity> map) {
+        Entity newAnt = null;
+        for (int i = 0; i < map.size(); i++) {
+            if (map.get(i).getName() == "Ant") {
+                Ant ant = (Ant) map.get(i);
                 if (ant.hasFood() && ant.getX() == getX() && ant.getY() == getY()) {
                     ant.setFood(false);
                     foodAmount++;
                 }
             }
         }
-        if (foodAmount >= 10)
-            spawnAnt(map);
+        if (foodAmount >= 10){
+            foodAmount -= 10;
+            newAnt = spawnAnt();
+        }
 
-        return null;
+        return new Object[]{newAnt, true};
     }
 
     @Override

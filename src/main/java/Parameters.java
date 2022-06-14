@@ -10,7 +10,7 @@ public class Parameters {
 //    private int numberOfHornets = 0;
 //    private int numberOfFlowers = 0;
 
-    private static int numberOfParameters = 4;
+    private static int numberOfParameters = 5;
     private static int numberOfListsOfParameters = 0;
 
     public static void loadDataFromFile(String fileName) {

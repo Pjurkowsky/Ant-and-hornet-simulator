@@ -11,14 +11,8 @@ public class Flower extends Entity {
 
 
     @Override
-    public JPanel draw() {
-        model.setBounds(x * SimScreen.BLOCKSIZE + 1, y * SimScreen.BLOCKSIZE + 1 + SimScreen.offsetOfHeight, SimScreen.BLOCKSIZE - 1, SimScreen.BLOCKSIZE - 1);
-        return model;
-    }
-
-    @Override
-    public Entity update(ArrayList<Entity> map) {
-        return null;
+    public Object[] update(ArrayList<Entity> map) {
+        return new Object[]{null, false};
     }
 
     @Override

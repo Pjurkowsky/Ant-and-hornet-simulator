@@ -26,4 +26,28 @@ public enum Direction {
         }
         return CENTRE;
     }
+
+    public static int toInteger(Direction x) {
+        switch (x) {
+            case TOPLEFT:
+                return 0;
+            case TOP:
+                return 1;
+            case TOPRIGHT:
+                return 2;
+            case LEFT:
+                return 3;
+            case CENTRE:
+                return 4;
+            case RIGHT:
+                return 5;
+            case BOTTOMLEFT:
+                return 6;
+            case BOTTOM:
+                return 7;
+            case BOTTOMRIGHT:
+                return 8;
+        }
+        return -1;
+    }
 }

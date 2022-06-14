@@ -5,6 +5,7 @@ import java.util.Random;
 
 public class Hornet extends Insect {
     Random random;
+
     Hornet(int x, int y) {
         super(x, y);
         model.setBackground(Color.RED);
@@ -12,36 +13,44 @@ public class Hornet extends Insect {
 
     private Entity attack(ArrayList<Entity> map) {
 
-        for (Entity entity: map) {
-            Entity ant = entity;
-            if ((ant.getName() == "Ant" || ant.getName() == "SoliderAnt") && ant.getX() == getX() && ant.getY() == getY()) {
-
+        for (Entity entity : map) {
+            if ((entity.getName() == "Ant" || entity.getName() == "SoliderAnt") && entity.getX() == getX() && entity.getY() == getY()) {
                 random = new Random();
-                if ( random.nextDouble() > 0.5){
-                    System.out.println( ant.getName());
+                if (random.nextDouble() > 0.5) {
                     return entity;
-                }
-
-
-                else
+                } else
                     return null;
             }
         }
         return null;
     }
 
-    @Override
-    public JPanel draw() {
-        model.setBounds(x * SimScreen.BLOCKSIZE + 1, y * SimScreen.BLOCKSIZE + 1 + SimScreen.offsetOfHeight, SimScreen.BLOCKSIZE - 1, SimScreen.BLOCKSIZE - 1);
-        return model;
-    }
+
 
     @Override
-    public Entity update(ArrayList<Entity> map) {
-        changeDir();
+    public Object[] update(ArrayList<Entity> map) {
+
+        Entity flower = checkForClosest(map, "Flower");
+        if (flower != null && calcDistance(flower.getX(), flower.getY()) <= 4) {
+
+            int dir = Direction.toInteger(direction);
+            System.out.println("dir: " +dir);
+            dir += 6;
+            dir %= 8;
+
+            direction = Direction.fromInteger(dir);
+            System.out.println("dir2: " + Direction.toInteger(direction));
+            model.setBackground(Color.CYAN);
+        }
+        else {
+            changeDir();
+            model.setBackground(Color.RED);
+        }
+
+
         movement();
+        return new Object[] { attack(map), false};
 
-        return attack( map);
     }
 
     @Override
