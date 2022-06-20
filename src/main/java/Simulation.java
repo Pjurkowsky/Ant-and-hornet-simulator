@@ -22,7 +22,7 @@ public class Simulation {
     public static int numberOfSimulations = 50;
     public static int currentNumberOfSimulation = 0;
 
-    public final static boolean testMode = false;
+    public final static boolean testMode = true;
 
     SimScreen simScreen;
     ControlScreen controlScreen;
