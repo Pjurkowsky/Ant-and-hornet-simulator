@@ -11,7 +11,7 @@ public class Simulation {
 
     public static int FPS = 10000;
     private static double timePerFrame = 1000000000.0 / FPS;
-    private boolean running = false;
+    private boolean running = true;
 
 
     private static String fileNameInput = "data.txt";
@@ -22,7 +22,7 @@ public class Simulation {
     public static int numberOfSimulations = 50;
     public static int currentNumberOfSimulation = 0;
 
-    public final static boolean testMode = true;
+    public final static boolean testMode = false;
 
     SimScreen simScreen;
     ControlScreen controlScreen;
