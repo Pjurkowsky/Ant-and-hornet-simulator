@@ -11,7 +11,7 @@ public class Simulation {
 
     public static int FPS = 10000;
     private static double timePerFrame = 1000000000.0 / FPS;
-    private boolean running = true;
+    private boolean running = false;
 
 
     private static String fileNameInput = "data.txt";
