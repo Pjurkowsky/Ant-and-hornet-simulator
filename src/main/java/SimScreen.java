@@ -35,10 +35,24 @@ public class SimScreen extends JPanel {
 
     private Nest nest;
 
+    ArrayList<ArrayList<Integer>> listOfOutputData = new ArrayList<>();
+    private int counter = 0;
+    private int init_counter = 0;
 
     public SimScreen() {
         //init map and jPanelMap
         map = new ArrayList<>();
+        for (int i = 0; i < Parameters.getSteps() / Parameters.getHowOftenLogging(); i++) {
+            listOfOutputData.add(new ArrayList<>());
+            listOfOutputData.get(i).add(0);
+            listOfOutputData.get(i).add(0);
+            listOfOutputData.get(i).add(0);
+            listOfOutputData.get(i).add(0);
+            listOfOutputData.get(i).add(0);
+            listOfOutputData.get(i).add(0);
+            listOfOutputData.get(i).add(0);
+        }
+
     }
 
     //used to init new map
@@ -46,12 +60,22 @@ public class SimScreen extends JPanel {
         //reset steps
         steps = 0;
 
+        //counter resets
+        counter = 0;
+
+        //init counter
+        init_counter++;
+
+
         //reset entities
         numberOfHornets = setNumberOfHornets;
         numberOfFlowers = setNumberOfFlowers;
         numberOfFood = setNumberOfFood;
         numberOfAnts = setNumberOfAnts;
         numberOfSoliderAnts = setNumberOfSoliderAnts;
+
+
+
 
 
         //reset map
@@ -96,9 +120,10 @@ public class SimScreen extends JPanel {
         drawGrid(g);
 
         // draw cells
-        for (int i = 0; i < map.size(); i++) {
-            this.add(map.get(i).draw());
-        }
+        if (!Simulation.testMode)
+            for (int i = 0; i < map.size(); i++) {
+                this.add(map.get(i).draw());
+            }
     }
 
     public void paintComponent(Graphics g) {
@@ -147,12 +172,21 @@ public class SimScreen extends JPanel {
                     numberOfFood++;
                 else if (entity.getName() == "Hornet")
                     numberOfHornets++;
+                if (!Simulation.testMode)
                 this.add(entity.draw());
                 map.add(entity);
             }
 
+            if ((steps % Parameters.getHowOftenLogging()) == 0 && Simulation.testMode) {
+                getOutputData();
+                counter++;
+            }
+
+
             this.repaint(); //redraw the screen
         }
+        if (Simulation.currentNumberOfSimulation >= Simulation.numberOfSimulations)
+            Parameters.createOutputFile("/" + Simulation.getFileNameOutput(), listOfOutputData, init_counter);
     }
 
     private void drawGrid(Graphics g) {
@@ -219,5 +253,17 @@ public class SimScreen extends JPanel {
     public int getNumberOfFoodInNest() {
         return nest.getFoodAmount();
     }
+
+    public void getOutputData() {
+
+        listOfOutputData.get(counter).set(0, listOfOutputData.get(counter).get(0) + getSteps());
+        listOfOutputData.get(counter).set(1, listOfOutputData.get(counter).get(1) + numberOfAnts);
+        listOfOutputData.get(counter).set(2, listOfOutputData.get(counter).get(2) + numberOfSoliderAnts);
+        listOfOutputData.get(counter).set(3, listOfOutputData.get(counter).get(3) + numberOfHornets);
+        listOfOutputData.get(counter).set(4, listOfOutputData.get(counter).get(4) + numberOfFlowers);
+        listOfOutputData.get(counter).set(5, listOfOutputData.get(counter).get(5) + numberOfFood);
+        listOfOutputData.get(counter).set(6, listOfOutputData.get(counter).get(6) + nest.getTotalFoodAmount());
+    }
+
 }
 

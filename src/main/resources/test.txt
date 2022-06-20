@@ -1,0 +1,1 @@
+step    ants    soliderAnts    hornets    flowers    foodOnMap   foodCollected

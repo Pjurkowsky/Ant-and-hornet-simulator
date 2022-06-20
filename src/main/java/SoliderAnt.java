@@ -17,7 +17,7 @@ public class SoliderAnt extends Ant {
             Entity entity = map.get(i);
             if (entity.getName() == "Hornet" && entity.getX() == getX() && entity.getY() == getY()) {
                 random = new Random();
-                if (random.nextDouble() > 0.5)
+                if (random.nextDouble() > Parameters.getProbOfSAntKillHornet())
                     return entity;
                 else
                     return null;

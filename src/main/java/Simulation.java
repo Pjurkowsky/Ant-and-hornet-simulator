@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Simulation {
 
@@ -8,15 +9,20 @@ public class Simulation {
     public static final double simScreenFactor = 0.8; // divide screen 20% for controlScreen and 80% for simScreen
     public static final int offsetOfWidth = (int) Math.round(WIDTH * (1 - simScreenFactor));
 
-    public static int FPS = 10;
+    public static int FPS = 10000;
     private static double timePerFrame = 1000000000.0 / FPS;
     private boolean running = true;
 
 
-    private String fileNameInput = "data.txt";
-    private String fileNameOutput = "output.txt";
+    private static String fileNameInput = "data.txt";
+    private static String fileNameOutput = "output.txt";
 
     private int setSteps = 30;
+
+    public static int numberOfSimulations = 50;
+    public static int currentNumberOfSimulation = 0;
+
+    public final static boolean testMode = false;
 
     SimScreen simScreen;
     ControlScreen controlScreen;
@@ -42,7 +48,7 @@ public class Simulation {
         frame.add(controlScreen, BorderLayout.WEST);
         frame.add(simScreen, BorderLayout.EAST);
         frame.pack();
-        frame.setResizable(false);
+        frame.setResizable(true);
         frame.setVisible(true);
 
         double lastTime = System.nanoTime();
@@ -51,12 +57,24 @@ public class Simulation {
             if (delta >= timePerFrame) {
                 if (simScreen.getSteps() >= setSteps) {
                     simScreen.setRunning(false);
+                    if (testMode) {
+                        simScreen.init();
+                        simScreen.setRunning(true);
+                        currentNumberOfSimulation++;
+                        if (currentNumberOfSimulation >= numberOfSimulations)
+                            simScreen.setRunning(false);
+                    }
+
                 }
                 simScreen.update();
                 controlScreen.update();
+                if (currentNumberOfSimulation >= numberOfSimulations)
+                    System.exit(0);
                 lastTime = System.nanoTime();
             }
+
         }
+
     }
 
     public static void main(String[] args) {
@@ -84,7 +102,11 @@ public class Simulation {
         return fileNameInput;
     }
 
-    public String getFileNameOutput() {
+    public static String getFileNameOutput() {
         return fileNameOutput;
+    }
+
+    public void setFileNameOutput(String fileNameOutput) {
+        this.fileNameOutput = fileNameOutput;
     }
 }

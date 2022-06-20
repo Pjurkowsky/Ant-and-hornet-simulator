@@ -1,1 +1,1 @@
-1 2 3
+steps   ants    hornets   flowers   food   how_often_logging   prob_of_hornet_killing_ant   prob_of_sAnt_killing_hornet   food_to_born_new_ant  prob_born_sAnt

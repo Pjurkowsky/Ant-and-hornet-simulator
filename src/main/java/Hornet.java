@@ -16,7 +16,7 @@ public class Hornet extends Insect {
             Entity entity = map.get(i);
             if ((entity.getName() == "Ant" || entity.getName() == "SoliderAnt") && entity.getX() == getX() && entity.getY() == getY()) {
                 random = new Random();
-                if (random.nextDouble() > 0.5) {
+                if (random.nextDouble() > Parameters.getProbOfHornetKillAnt()) {
                     return entity;
                 } else
                     return null;

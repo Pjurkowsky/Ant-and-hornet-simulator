@@ -7,9 +7,6 @@ import java.util.ArrayList;
 
 public class ControlScreen extends JPanel implements ActionListener {
 
-    JLabel simScreenSideLengthText;
-    JTextField simScreenSideLengthTextField;
-
     JLabel antsNumberText;
     JTextField antsNumberTextField;
 
@@ -63,7 +60,7 @@ public class ControlScreen extends JPanel implements ActionListener {
     int xButton = 30;
     int y = 20;
 
-    private int simScreenSideLength = 0;
+    private int steps = 0;
     private int numberOfAnts = 0;
     private int numberOfHornets = 0;
     private int numberOfFlowers = 0;
@@ -271,28 +268,28 @@ public class ControlScreen extends JPanel implements ActionListener {
         currentFoodInNestNumberText.setText("Food in nest: " + simScreen.getNumberOfFoodInNest());
     }
 
-    public void updateParameters(ArrayList<Integer> parameters) {
+    public void updateParameters(ArrayList<Double> parameters) {
 
-//        simScreenSideLength = parameters.get(0);
-//        simScreenSideLengthTextField.setText(Integer.toString(simScreenSideLength));
-//        simScreen.BLOCKSIZE = (SimScreen.WIDTH / simScreenSideLength);
+        steps = (int) Parameters.getSteps();
+        stepSetTextField.setText(Integer.toString(steps));
+        simulation.setSetSteps(steps);
 
-        numberOfAnts = parameters.get(1);
+        numberOfAnts = Parameters.getNumberOfAnts();
         antsNumberTextField.setText(Integer.toString(numberOfAnts));
         currentAntsNumberText.setText("Ants: " + numberOfAnts);
         simScreen.setNumberOfAnts(numberOfAnts);
 
-        numberOfHornets = parameters.get(2);
+        numberOfHornets = Parameters.getNumberOfHornets();
         simScreen.setNumberOfHornets(numberOfHornets);
         currentHornetsNumberText.setText("Hornets: " + numberOfHornets);
         hornetNumberTextField.setText(Integer.toString(numberOfHornets));
 
-        numberOfFlowers = parameters.get(3);
+        numberOfFlowers = Parameters.getNumberOfFlowers();
         simScreen.setNumberOfFlowers(numberOfFlowers);
         currentFlowersNumberText.setText("Flowers: " + numberOfFlowers);
         flowerNumberTextField.setText(Integer.toString(numberOfFlowers));
 
-        numberOfFood = parameters.get(4);
+        numberOfFood = Parameters.getNumberOfFood();
         simScreen.setNumberOfFood(numberOfFood);
         foodNumberTextField.setText(Integer.toString(numberOfFood));
 
@@ -374,6 +371,14 @@ public class ControlScreen extends JPanel implements ActionListener {
             if (fileName.contains(".txt")) {
                 Parameters.loadDataFromFile("/" + fileName);
                 updateParameters(Parameters.getParameters(0));
+            }
+        }
+
+        if (e.getSource() == saveDataTextField) {
+            String fileName = saveDataTextField.getText();
+            if (fileName.contains(".txt")) {
+              simulation.setFileNameOutput(fileName);
+                System.out.println(fileName);
             }
         }
     }

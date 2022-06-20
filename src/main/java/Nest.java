@@ -6,6 +6,7 @@ import java.util.Random;
 public class Nest extends Entity {
     Random random;
     private int foodAmount = 0;
+    private int totalFoodAmount = 0;
 
     Nest(int x, int y, int numberOfAnts, ArrayList<Entity> map) {
         super(x, y);
@@ -20,12 +21,16 @@ public class Nest extends Entity {
         return foodAmount;
     }
 
+    public int getTotalFoodAmount(){
+        return totalFoodAmount;
+    }
+
     private Entity spawnAnt() {
         random = new Random();
-        if (random.nextDouble() >= 0.5)
-            return new Ant(getX(), getY());
-        else
+        if (random.nextDouble() <= Parameters.getProbBornSAnt())
             return new SoliderAnt(getX(), getY());
+        else
+            return new Ant(getX(), getY());
     }
 
     @Override
@@ -37,11 +42,12 @@ public class Nest extends Entity {
                 if (ant.hasFood() && ant.getX() == getX() && ant.getY() == getY()) {
                     ant.setFood(false);
                     foodAmount++;
+                    totalFoodAmount++;
                 }
             }
         }
-        if (foodAmount >= 10){
-            foodAmount -= 10;
+        if (foodAmount >= Parameters.getFoodToBornNewAnt()){
+            foodAmount -= Parameters.getFoodToBornNewAnt();
             newAnt = spawnAnt();
         }
 
